@@ -38,7 +38,7 @@ impl Player {
         let mut samples = HashMap::new();
         samples.insert(Note::A3, a3);
 
-        let sampler = Sampler::new(HashSet::from_iter(vec![Note::A3]));
+        let sampler = Sampler::new(HashSet::from_iter(samples.keys().cloned()));
         let (note, playback) = sampler.calc_playback_at_note(note);
         let buffer = samples.get(&note).expect("note not found");
 

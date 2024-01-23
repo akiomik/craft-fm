@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 
-#[derive(PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash)]
 #[wasm_bindgen]
 pub enum Note {
     C3,
