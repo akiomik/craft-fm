@@ -5,11 +5,16 @@ import('./pkg')
 
     [
       [rust_module.Note.C3, "c"],
+      [rust_module.Note.Csharp3, "c#"],
       [rust_module.Note.D3, "d"],
+      [rust_module.Note.Dsharp3, "d#"],
       [rust_module.Note.E3, "e"],
       [rust_module.Note.F3, "f"],
+      [rust_module.Note.Fsharp3, "f#"],
       [rust_module.Note.G3, "g"],
+      [rust_module.Note.Gsharp3, "g#"],
       [rust_module.Note.A3, "a"],
+      [rust_module.Note.Asharp3, "a#"],
       [rust_module.Note.B3, "b"],
     ].forEach(([note, id]) => {
       const button = document.getElementById(id);
