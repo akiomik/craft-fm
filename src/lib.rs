@@ -33,14 +33,14 @@ impl Drop for Player {
 #[wasm_bindgen]
 impl Player {
     #[wasm_bindgen(constructor)]
-    pub async fn new() -> Result<Player, JsValue> {
+    pub async fn new(note: Note) -> Result<Player, JsValue> {
         let ctx = AudioContext::new()?;
         let a3 = load_sample(include_bytes!("../samples/a3.wav")).await?;
         let mut samples = HashMap::new();
         samples.insert(Note::A3, a3);
 
         let sampler = Sampler::new(HashSet::from_iter(vec![Note::A3]));
-        let (note, playback) = sampler.calc_playback_at_note(Note::C3);
+        let (note, playback) = sampler.calc_playback_at_note(note);
         let buffer = samples.get(&note).expect("note not found");
 
         let mut opts = AudioBufferSourceOptions::new();
