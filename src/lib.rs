@@ -11,8 +11,7 @@ mod sampler;
 use crate::sampler::Sampler;
 use crate::note::Note;
 
-async fn load_sample(sample: &[u8]) -> Result<AudioBuffer, JsValue> {
-    let ctx = AudioContext::new()?;
+async fn load_sample(ctx: &AudioContext, sample: &[u8]) -> Result<AudioBuffer, JsValue> {
     let array_buffer = Uint8Array::from(sample).buffer();
     let decoded = JsFuture::from(ctx.decode_audio_data(&array_buffer)?).await?;
     Ok(AudioBuffer::from(decoded))
@@ -35,7 +34,7 @@ impl Player {
     #[wasm_bindgen(constructor)]
     pub async fn new(note: Note) -> Result<Player, JsValue> {
         let ctx = AudioContext::new()?;
-        let a3 = load_sample(include_bytes!("../samples/a3.wav")).await?;
+        let a3 = load_sample(&ctx, include_bytes!("../samples/a3.wav")).await?;
         let mut samples = HashMap::new();
         samples.insert(Note::A3, a3);
 
