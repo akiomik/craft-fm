@@ -1,5 +1,8 @@
 import('./pkg')
-  .then(rust_module => {
+  .then(async (rust_module) => {
+    const promise = new rust_module.Player()
+    const player = await promise;
+
     [
       [rust_module.Note.C3, "c"],
       [rust_module.Note.D3, "d"],
@@ -10,10 +13,8 @@ import('./pkg')
       [rust_module.Note.B3, "b"],
     ].forEach(([note, id]) => {
       const button = document.getElementById(id);
-      button.addEventListener("click", async () => {
-        const async_player = new rust_module.Player(note);
-        player = await async_player;
-        player.start();
+      button.addEventListener("click", () => {
+        player.play(note);
       });
     });
   })
