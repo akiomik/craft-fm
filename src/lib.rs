@@ -1,6 +1,15 @@
+use std::collections::{HashMap, HashSet};
+
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::JsFuture;
+use web_sys::AudioBufferSourceOptions;
 use web_sys::{js_sys::Uint8Array, AudioBuffer, AudioBufferSourceNode, AudioContext};
+
+mod note;
+mod sampler;
+
+use crate::sampler::Sampler;
+use crate::note::Note;
 
 async fn load_sample(sample: &[u8]) -> Result<AudioBuffer, JsValue> {
     let ctx = AudioContext::new()?;
@@ -26,10 +35,17 @@ impl Player {
     #[wasm_bindgen(constructor)]
     pub async fn new() -> Result<Player, JsValue> {
         let ctx = AudioContext::new()?;
-        let sample = include_bytes!("../samples/a3.wav");
-        let buffer = load_sample(sample).await?;
+        let a3 = load_sample(include_bytes!("../samples/a3.wav")).await?;
+        let mut samples = HashMap::new();
+        samples.insert(Note::A3, a3);
 
-        let src = ctx.create_buffer_source()?;
+        let sampler = Sampler::new(HashSet::from_iter(vec![Note::A3]));
+        let (note, playback) = sampler.calc_playback_at_note(Note::C3);
+        let buffer = samples.get(&note).expect("note not found");
+
+        let mut opts = AudioBufferSourceOptions::new();
+        opts.playback_rate(playback);
+        let src = AudioBufferSourceNode::new_with_options(&ctx, &opts)?;
         src.set_buffer(Some(&buffer));
         src.connect_with_audio_node(&ctx.destination())?;
 
