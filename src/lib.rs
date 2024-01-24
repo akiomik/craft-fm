@@ -1,9 +1,7 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use wasm_bindgen::prelude::*;
-use wasm_bindgen_futures::JsFuture;
-use web_sys::AudioBufferSourceOptions;
-use web_sys::{js_sys::Uint8Array, AudioBuffer, AudioBufferSourceNode, AudioContext};
+use web_sys::AudioContext;
 
 mod note;
 mod sampler;
@@ -11,17 +9,10 @@ mod sampler;
 use crate::sampler::Sampler;
 use crate::note::Note;
 
-async fn load_sample(ctx: &AudioContext, sample: &[u8]) -> Result<AudioBuffer, JsValue> {
-    let array_buffer = Uint8Array::from(sample).buffer();
-    let decoded = JsFuture::from(ctx.decode_audio_data(&array_buffer)?).await?;
-    Ok(AudioBuffer::from(decoded))
-}
-
 #[wasm_bindgen]
 pub struct Player {
     ctx: AudioContext,
     sampler: Sampler,
-    samples: HashMap<Note, AudioBuffer>
 }
 
 impl Drop for Player {
@@ -33,24 +24,17 @@ impl Drop for Player {
 #[wasm_bindgen]
 impl Player {
     #[wasm_bindgen(constructor)]
-    pub async fn new() -> Result<Player, JsValue> {
+    pub fn new() -> Result<Player, JsValue> {
         let ctx = AudioContext::new()?;
-        let a3 = load_sample(&ctx, include_bytes!("../samples/a3.wav")).await?;
         let mut samples = HashMap::new();
-        samples.insert(Note::A3, a3);
-        let sampler = Sampler::new(HashSet::from_iter(samples.keys().cloned()));
+        samples.insert(Note::A3, include_bytes!("../samples/a3.wav").as_slice().into());
+        let sampler = Sampler::new(ctx.clone(), samples);
 
-        Ok(Self { ctx, sampler, samples })
+        Ok(Self { ctx, sampler })
     }
 
-    pub fn play(&self, note: Note) -> Result<(), JsValue> {
-        let (note, playback) = self.sampler.calc_playback_at_note(note);
-        let buffer = self.samples.get(&note).expect("note not found");
-
-        let mut opts = AudioBufferSourceOptions::new();
-        opts.playback_rate(playback);
-        let src = AudioBufferSourceNode::new_with_options(&self.ctx, &opts)?;
-        src.set_buffer(Some(&buffer));
+    pub async fn play(&self, note: Note) -> Result<(), JsValue> {
+        let src = self.sampler.buffer_node(note).await?;
         src.connect_with_audio_node(&self.ctx.destination())?;
         src.start()?;
         Ok(())
