@@ -15,6 +15,18 @@ pub enum Note {
     A3,
     Asharp3,
     B3,
+    C4,
+    Csharp4,
+    D4,
+    Dsharp4,
+    E4,
+    F4,
+    Fsharp4,
+    G4,
+    Gsharp4,
+    A4,
+    Asharp4,
+    B4,
 }
 
 // TODO: support other base frequencies (e.g. 442, 444)
@@ -33,6 +45,18 @@ impl Note {
             Note::A3 => 220.00,
             Note::Asharp3 => 233.08,
             Note::B3 => 246.94,
+            Note::C4 => 261.63,
+            Note::Csharp4 => 277.18,
+            Note::D4 => 293.66,
+            Note::Dsharp4 => 311.13,
+            Note::E4 => 329.63,
+            Note::F4 => 349.23,
+            Note::Fsharp4 => 369.99,
+            Note::G4 => 392.00,
+            Note::Gsharp4 => 415.30,
+            Note::A4 => 440.00,
+            Note::Asharp4 => 466.16,
+            Note::B4 => 493.88,
         }
     }
 }
