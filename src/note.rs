@@ -29,8 +29,37 @@ pub enum Note {
     B4,
 }
 
-// TODO: support other base frequencies (e.g. 442, 444)
 impl Note {
+    pub fn octave(&self) -> u8 {
+        match self {
+            Note::C3 => 3,
+            Note::Csharp3 => 3,
+            Note::D3 => 3,
+            Note::Dsharp3 => 3,
+            Note::E3 => 3,
+            Note::F3 => 3,
+            Note::Fsharp3 => 3,
+            Note::G3 => 3,
+            Note::Gsharp3 => 3,
+            Note::A3 => 3,
+            Note::Asharp3 => 3,
+            Note::B3 => 3,
+            Note::C4 => 4,
+            Note::Csharp4 => 4,
+            Note::D4 => 4,
+            Note::Dsharp4 => 4,
+            Note::E4 => 4,
+            Note::F4 => 4,
+            Note::Fsharp4 => 4,
+            Note::G4 => 4,
+            Note::Gsharp4 => 4,
+            Note::A4 => 4,
+            Note::Asharp4 => 4,
+            Note::B4 => 4,
+        }
+    }
+
+    // TODO: support other base frequencies (e.g. 442, 444)
     pub fn freq(&self) -> f32 {
         match self {
             Note::C3 => 130.81,
