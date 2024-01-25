@@ -73,6 +73,10 @@ impl Sequencer {
         self.timer = None;
     }
 
+    pub fn is_playing(&self) -> bool {
+        self.timer.is_some()
+    }
+
     pub fn seconds_per_beat(&self) -> f64 {
         (60.0 / self.bpm as f64) * (4.0 / self.resolution.beats_per_measure() as f64)
     }
