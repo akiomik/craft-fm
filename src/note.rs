@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use wasm_bindgen::prelude::*;
 
 #[derive(Clone, PartialEq, Eq, Hash)]
@@ -66,6 +68,38 @@ impl Note {
     // TODO: support other base frequencies (e.g. 442, 444)
     pub fn freq(&self) -> f32 {
         440.0 * (2.0_f32).powf((self.note_number() as i8 - 69) as f32 / 12.0)
+    }
+}
+
+impl Display for Note {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
+            Note::C3 => "C3",
+            Note::Csharp3 => "C#3",
+            Note::D3 => "D3",
+            Note::Dsharp3 => "D#3",
+            Note::E3 => "E3",
+            Note::F3 => "F3",
+            Note::Fsharp3 => "F#3",
+            Note::G3 => "G3",
+            Note::Gsharp3 => "G#3",
+            Note::A3 => "A3",
+            Note::Asharp3 => "A#3",
+            Note::B3 => "B3",
+            Note::C4 => "C4",
+            Note::Csharp4 => "C#4",
+            Note::D4 => "D4",
+            Note::Dsharp4 => "D#4",
+            Note::E4 => "E4",
+            Note::F4 => "F4",
+            Note::Fsharp4 => "F#4",
+            Note::G4 => "G4",
+            Note::Gsharp4 => "G#4",
+            Note::A4 => "A4",
+            Note::Asharp4 => "A#4",
+            Note::B4 => "B4",
+        };
+        write!(f, "{}", s)
     }
 }
 
