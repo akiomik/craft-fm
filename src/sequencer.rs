@@ -63,7 +63,7 @@ impl Sequencer {
                 }
             },
             self.interval,
-        );
+        )?;
         self.timer = Some(timer);
 
         Ok(())
