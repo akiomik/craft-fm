@@ -31,7 +31,7 @@ impl Player {
     }
 
     pub async fn play(&self, note: Note) -> Result<(), JsValue> {
-        let src = self.sampler.buffer_node(note).await?;
+        let src = self.sampler.buffer_node(&note).await?;
         src.connect_with_audio_node(&self.ctx.destination())?;
         src.start()?;
         Ok(())
