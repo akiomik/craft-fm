@@ -8,8 +8,7 @@ extern "C" {
 
 #[wasm_bindgen]
 pub struct Interval {
-    #[allow(dead_code)]
-    closure: Closure<dyn FnMut()>,
+    _closure: Closure<dyn FnMut()>,
     handle: f64,
 }
 
@@ -18,9 +17,10 @@ impl Interval {
     where
         F: FnMut(),
     {
-        let closure = Closure::new(f);
-        let handle = setInterval(&closure, millis);
-        Interval { closure, handle }
+        let _closure = Closure::new(f);
+        let handle = setInterval(&_closure, millis);
+
+        Interval { _closure, handle }
     }
 }
 
