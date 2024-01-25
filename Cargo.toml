@@ -18,5 +18,6 @@ features = [
   "AudioBufferSourceOptions",
   "AudioContext",
   "AudioDestinationNode",
-  "Window"
+  "Window",
+  "console"
 ]
