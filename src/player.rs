@@ -34,9 +34,7 @@ impl Player {
     }
 
     pub fn play(&mut self, note: Note) -> Result<(), JsValue> {
-        if self.sequencer.is_playing() {
-            self.sequencer.stop();
-        }
+        self.sequencer.stop();
 
         let ctx = self.ctx.clone();
         let sampler = self.sampler.clone();
@@ -55,5 +53,9 @@ impl Player {
         })?;
 
         Ok(())
+    }
+
+    pub fn stop(&mut self) {
+        self.sequencer.stop();
     }
 }

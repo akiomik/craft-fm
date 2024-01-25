@@ -25,5 +25,10 @@ import('./pkg')
         player.play(note);
       });
     });
+
+    const stop_button = document.getElementById("stop");
+    stop_button.addEventListener("click", () => {
+      player.stop();
+    });
   })
   .catch(console.error);

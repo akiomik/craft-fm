@@ -73,6 +73,7 @@ impl Sequencer {
         self.timer = None;
     }
 
+    #[allow(dead_code)]
     pub fn is_playing(&self) -> bool {
         self.timer.is_some()
     }
