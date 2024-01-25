@@ -62,6 +62,10 @@ impl Sequencer {
         Ok(())
     }
 
+    pub fn stop(&mut self) {
+        self.timer = None;
+    }
+
     pub fn seconds_per_beat(&self) -> f64 {
         (60.0 / self.bpm as f64) * (4.0 / self.resolution.beats_per_measure() as f64)
     }
