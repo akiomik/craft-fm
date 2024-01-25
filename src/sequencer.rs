@@ -46,7 +46,7 @@ impl Sequencer {
         let ctx = self.ctx.clone();
         let beats_per_measure = self.resolution.beats_per_measure();
         let secs = self.seconds_per_beat();
-        let interval = self.interval;
+        let interval = self.interval as f64 / 1000.0; // in secs
 
         let mut beat_time = self.ctx.current_time();
         let mut step = 0;
@@ -54,7 +54,7 @@ impl Sequencer {
         let timer = Interval::new(
             move || {
                 let time = ctx.current_time();
-                let next_time = time + interval as f64;
+                let next_time = time + interval;
 
                 while beat_time < next_time {
                     tick(beat_time, step).unwrap(); // TODO
