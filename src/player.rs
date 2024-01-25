@@ -28,7 +28,7 @@ impl Player {
         let mut samples = HashMap::new();
         samples.insert(Note::A3, include_bytes!("../samples/a3.wav").as_slice().into());
         let sampler = Sampler::new(ctx.clone(), samples).await?;
-        let sequencer = Sequencer::new(ctx.clone(), 120, Resolution::Eighth, 250);
+        let sequencer = Sequencer::new(ctx.clone(), 120, Resolution::Eighth, 100);
 
         Ok(Self { ctx, sampler, sequencer })
     }
@@ -39,10 +39,16 @@ impl Player {
         let ctx = self.ctx.clone();
         let sampler = self.sampler.clone();
 
-        self.sequencer.start(move |time, _| {
-            let src = sampler.buffer_node(&note)?;
-            src.connect_with_audio_node(&ctx.destination())?;
-            src.start_with_when(time)?;
+        self.sequencer.start(move |time, step| {
+            if step == 0 {
+                let src = sampler.buffer_node(&Note::C4)?;
+                src.connect_with_audio_node(&ctx.destination())?;
+                src.start_with_when(time)?;
+            } else {
+                let src = sampler.buffer_node(&note)?;
+                src.connect_with_audio_node(&ctx.destination())?;
+                src.start_with_when(time)?;
+            }
             Ok(())
         })?;
 

@@ -44,15 +44,22 @@ impl Sequencer {
         }
 
         let ctx = self.ctx.clone();
-        let res = self.resolution.clone();
+        let beats_per_measure = self.resolution.beats_per_measure();
         let secs = self.seconds_per_beat();
+        let interval = self.interval;
+
+        let mut beat_time = self.ctx.current_time();
+        let mut step = 0;
+
         let timer = Interval::new(
             move || {
-                // TODO: setIntervalの間隔によらずtimeベースでtickを実行する
                 let time = ctx.current_time();
-                for step in 0..res.beats_per_measure() {
-                    let offset = secs * step as f64;
-                    tick(time + offset, step).unwrap(); // TODO
+                let next_time = time + interval as f64;
+
+                while beat_time < next_time {
+                    tick(beat_time, step).unwrap(); // TODO
+                    beat_time += secs;
+                    step = (step + 1) % beats_per_measure;
                 }
             },
             self.interval,
