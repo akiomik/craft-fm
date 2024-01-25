@@ -65,7 +65,7 @@ impl Note {
 
     // TODO: support other base frequencies (e.g. 442, 444)
     pub fn freq(&self) -> f32 {
-        440.0 * (2.0 as f32).powf((self.note_number() as i8 - 69) as f32 / 12.0)
+        440.0 * (2.0_f32).powf((self.note_number() as i8 - 69) as f32 / 12.0)
     }
 }
 
