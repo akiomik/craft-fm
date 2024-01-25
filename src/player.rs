@@ -21,17 +21,17 @@ impl Drop for Player {
 #[wasm_bindgen]
 impl Player {
     #[wasm_bindgen(constructor)]
-    pub fn new() -> Result<Player, JsValue> {
+    pub async fn new() -> Result<Player, JsValue> {
         let ctx = AudioContext::new()?;
         let mut samples = HashMap::new();
         samples.insert(Note::A3, include_bytes!("../samples/a3.wav").as_slice().into());
-        let sampler = Sampler::new(ctx.clone(), samples);
+        let sampler = Sampler::new(ctx.clone(), samples).await?;
 
         Ok(Self { ctx, sampler })
     }
 
-    pub async fn play(&self, note: Note) -> Result<(), JsValue> {
-        let src = self.sampler.buffer_node(&note).await?;
+    pub fn play(&self, note: Note) -> Result<(), JsValue> {
+        let src = self.sampler.buffer_node(&note)?;
         src.connect_with_audio_node(&self.ctx.destination())?;
         src.start()?;
         Ok(())
