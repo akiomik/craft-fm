@@ -1,7 +1,7 @@
 use wasm_bindgen::prelude::*;
 use web_sys::AudioContext;
 
-use crate::interval::Interval;
+use crate::worker::WebWorker;
 
 #[derive(Clone)]
 pub enum Resolution {
@@ -20,26 +20,35 @@ pub struct Sequencer {
     ctx: AudioContext,
     bpm: usize,
     resolution: Resolution,
-    timer: Option<Interval>,
     interval: u32,
+    worker: WebWorker,
+    is_playing: bool,
 }
 
 impl Sequencer {
-    pub fn new(ctx: AudioContext, bpm: usize, resolution: Resolution, interval: u32) -> Self {
-        Self {
+    pub fn new(
+        ctx: AudioContext,
+        bpm: usize,
+        resolution: Resolution,
+        interval: u32,
+    ) -> Result<Self, JsValue> {
+        let worker = WebWorker::new("./worker.js")?;
+
+        Ok(Self {
             ctx,
             bpm,
             resolution,
             interval,
-            timer: None,
-        }
+            worker,
+            is_playing: false,
+        })
     }
 
     pub fn start<F>(&mut self, tick: F) -> Result<(), JsValue>
     where
         F: Fn(f64, usize) -> Result<(), JsValue> + 'static,
     {
-        if self.timer.is_some() {
+        if self.is_playing() {
             return Ok(());
         }
 
@@ -48,11 +57,12 @@ impl Sequencer {
         let secs = self.seconds_per_beat();
         let interval = self.interval as f64 / 1000.0; // in secs
 
+        // TODO: Add offset for the first beat
         let mut beat_time = self.ctx.current_time();
         let mut step = 0;
 
-        let timer = Interval::new(
-            move || {
+        self.worker.set_onmessage(move |message| {
+            if message.data() == "tick" {
                 let time = ctx.current_time();
                 let next_time = time + interval;
 
@@ -61,21 +71,23 @@ impl Sequencer {
                     beat_time += secs;
                     step = (step + 1) % beats_per_measure;
                 }
-            },
-            self.interval,
-        )?;
-        self.timer = Some(timer);
+            }
+        });
+        self.worker.post_message("start")?;
+        self.is_playing = true;
 
         Ok(())
     }
 
-    pub fn stop(&mut self) {
-        self.timer = None;
+    pub fn stop(&mut self) -> Result<(), JsValue> {
+        self.worker.post_message("stop")?;
+        self.is_playing = false;
+        Ok(())
     }
 
     #[allow(dead_code)]
     pub fn is_playing(&self) -> bool {
-        self.timer.is_some()
+        self.is_playing
     }
 
     pub fn seconds_per_beat(&self) -> f64 {
