@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use wasm_bindgen::prelude::*;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[wasm_bindgen]
 pub enum Note {
     C2,
