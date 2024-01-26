@@ -114,6 +114,35 @@ mod tests {
     use super::*;
 
     #[wasm_bindgen_test]
+    fn test_start() {
+        let ctx = AudioContext::new().unwrap();
+        let mut seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
+        assert_eq!(seq.is_playing(), false);
+        seq.start(|_, _, _| Ok(())).unwrap();
+        assert_eq!(seq.is_playing(), true);
+    }
+
+    #[wasm_bindgen_test]
+    fn test_stop() {
+        let ctx = AudioContext::new().unwrap();
+        let mut seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
+        assert_eq!(seq.is_playing(), false);
+        seq.stop().unwrap();
+        assert_eq!(seq.is_playing(), false);
+    }
+
+    #[wasm_bindgen_test]
+    fn test_start_and_stop() {
+        let ctx = AudioContext::new().unwrap();
+        let mut seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
+        assert_eq!(seq.is_playing(), false);
+        seq.start(|_, _, _| Ok(())).unwrap();
+        assert_eq!(seq.is_playing(), true);
+        seq.stop().unwrap();
+        assert_eq!(seq.is_playing(), false);
+    }
+
+    #[wasm_bindgen_test]
     fn test_seconds_per_beat_60_4() {
         let ctx = AudioContext::new().unwrap();
         let seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
