@@ -117,29 +117,29 @@ mod tests {
     fn test_start() {
         let ctx = AudioContext::new().unwrap();
         let mut seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
-        assert_eq!(seq.is_playing(), false);
+        assert!(!seq.is_playing());
         seq.start(|_, _, _| Ok(())).unwrap();
-        assert_eq!(seq.is_playing(), true);
+        assert!(seq.is_playing());
     }
 
     #[wasm_bindgen_test]
     fn test_stop() {
         let ctx = AudioContext::new().unwrap();
         let mut seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
-        assert_eq!(seq.is_playing(), false);
+        assert!(!seq.is_playing());
         seq.stop().unwrap();
-        assert_eq!(seq.is_playing(), false);
+        assert!(!seq.is_playing());
     }
 
     #[wasm_bindgen_test]
     fn test_start_and_stop() {
         let ctx = AudioContext::new().unwrap();
         let mut seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
-        assert_eq!(seq.is_playing(), false);
+        assert!(!seq.is_playing());
         seq.start(|_, _, _| Ok(())).unwrap();
-        assert_eq!(seq.is_playing(), true);
+        assert!(seq.is_playing());
         seq.stop().unwrap();
-        assert_eq!(seq.is_playing(), false);
+        assert!(!seq.is_playing());
     }
 
     #[wasm_bindgen_test]
