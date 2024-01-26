@@ -57,20 +57,24 @@ impl Sampler {
         Some(closest_note)
     }
 
-    fn calc_note_and_playback_rate(&self, note: &Note) -> (Note, f32) {
+    fn calc_note_and_playback_rate(&self, note: &Note) -> Option<(Note, f32)> {
+        if self.samples.is_empty() {
+            return None;
+        }
+
         if self.samples.contains_key(note) {
-            (note.clone(), 1.0)
+            Some((note.clone(), 1.0))
         } else {
             let closest_note = self
                 .find_closest_note_in_samples(note)
-                .expect("closest note should be found"); // TODO
+                .expect("closest note should be found");
             let closest_freq = closest_note.freq();
-            (closest_note, note.freq() / closest_freq)
+            Some((closest_note, note.freq() / closest_freq))
         }
     }
 
     pub fn buffer_node(&self, note: &Note) -> Result<AudioBufferSourceNode, JsValue> {
-        let (sample_note, playback_rate) = self.calc_note_and_playback_rate(note);
+        let (sample_note, playback_rate) = self.calc_note_and_playback_rate(note).unwrap();
         let buffer = self.samples.get(&sample_note).expect("note not found");
 
         let mut opts = AudioBufferSourceOptions::new();
@@ -160,6 +164,80 @@ mod tests {
         assert_eq!(
             sampler.find_closest_note_in_samples(&Note::C4),
             Some(Note::A3)
+        );
+    }
+
+    #[wasm_bindgen_test]
+    async fn test_calc_note_and_playback_rate_0() {
+        let ctx = AudioContext::new().unwrap();
+        let samples = HashMap::new();
+        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        assert_eq!(sampler.calc_note_and_playback_rate(&Note::A2), None);
+    }
+
+    #[wasm_bindgen_test]
+    async fn test_calc_note_and_playback_rate_1_contains() {
+        let ctx = AudioContext::new().unwrap();
+        let mut samples = HashMap::new();
+        samples.insert(Note::A2, A2.into());
+        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        assert_eq!(
+            sampler.calc_note_and_playback_rate(&Note::A2),
+            Some((Note::A2, 1.0))
+        );
+    }
+
+    #[wasm_bindgen_test]
+    async fn test_calc_note_and_playback_rate_1_not_contains() {
+        let ctx = AudioContext::new().unwrap();
+        let mut samples = HashMap::new();
+        samples.insert(Note::A2, A2.into());
+        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        assert_eq!(
+            sampler.calc_note_and_playback_rate(&Note::C2),
+            Some((Note::A2, 0.59460354))
+        );
+        assert_eq!(
+            sampler.calc_note_and_playback_rate(&Note::C3),
+            Some((Note::A2, 1.1892071))
+        );
+    }
+
+    #[wasm_bindgen_test]
+    async fn test_calc_note_and_playback_rate_2_contains() {
+        let ctx = AudioContext::new().unwrap();
+        let mut samples = HashMap::new();
+        samples.insert(Note::A2, A2.into());
+        samples.insert(Note::A3, A3.into());
+        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        assert_eq!(
+            sampler.calc_note_and_playback_rate(&Note::A2),
+            Some((Note::A2, 1.0))
+        );
+        assert_eq!(
+            sampler.calc_note_and_playback_rate(&Note::A3),
+            Some((Note::A3, 1.0))
+        );
+    }
+
+    #[wasm_bindgen_test]
+    async fn test_calc_note_and_playback_rate_2_not_contains() {
+        let ctx = AudioContext::new().unwrap();
+        let mut samples = HashMap::new();
+        samples.insert(Note::A2, A2.into());
+        samples.insert(Note::A3, A3.into());
+        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        assert_eq!(
+            sampler.calc_note_and_playback_rate(&Note::C2),
+            Some((Note::A2, 0.59460354))
+        );
+        assert_eq!(
+            sampler.calc_note_and_playback_rate(&Note::C3),
+            Some((Note::A2, 1.1892071))
+        );
+        assert_eq!(
+            sampler.calc_note_and_playback_rate(&Note::C4),
+            Some((Note::A3, 1.1892071))
         );
     }
 }
