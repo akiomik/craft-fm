@@ -39,7 +39,7 @@ impl Player {
             include_bytes!("../samples/a4.m4a").as_slice().into(),
         );
         let sampler = Sampler::new(ctx.clone(), samples).await?;
-        let sequencer = Sequencer::new(ctx.clone(), 120, Resolution::Eighth, 100)?;
+        let sequencer = Sequencer::new(ctx.clone(), 120, 1, Resolution::Eighth, 100)?;
 
         Ok(Self {
             ctx,
@@ -54,7 +54,7 @@ impl Player {
         let ctx = self.ctx.clone();
         let sampler = self.sampler.clone();
 
-        self.sequencer.start(move |time, step| {
+        self.sequencer.start(move |time, step, _page| {
             if step == 0 {
                 let src = sampler.buffer_node(&Note::C4)?;
                 src.connect_with_audio_node(&ctx.destination())?;
