@@ -32,6 +32,36 @@ pub enum Note {
 }
 
 impl Note {
+    pub fn from_note_number(note_number: u8) -> Option<Self> {
+        match note_number {
+            48 => Some(Note::C3),
+            49 => Some(Note::Csharp3),
+            50 => Some(Note::D3),
+            51 => Some(Note::Dsharp3),
+            52 => Some(Note::E3),
+            53 => Some(Note::F3),
+            54 => Some(Note::Fsharp3),
+            55 => Some(Note::G3),
+            56 => Some(Note::Gsharp3),
+            57 => Some(Note::A3),
+            58 => Some(Note::Asharp3),
+            59 => Some(Note::B3),
+            60 => Some(Note::C4),
+            61 => Some(Note::Csharp4),
+            62 => Some(Note::D4),
+            63 => Some(Note::Dsharp4),
+            64 => Some(Note::E4),
+            65 => Some(Note::F4),
+            66 => Some(Note::Fsharp4),
+            67 => Some(Note::G4),
+            68 => Some(Note::Gsharp4),
+            69 => Some(Note::A4),
+            70 => Some(Note::Asharp4),
+            71 => Some(Note::B4),
+            _ => None,
+        }
+    }
+
     pub fn octave(&self) -> u8 {
         self.note_number() / 12 - 1
     }
