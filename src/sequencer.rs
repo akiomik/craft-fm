@@ -66,7 +66,7 @@ impl Sequencer {
 
                 while beat_time < next_time {
                     // NOTE: Added interval as an offset for the first beat
-                    tick(beat_time + interval, step).unwrap(); // TODO
+                    tick(beat_time + interval, step).expect("tick should succeed");
                     beat_time += secs;
                     step = (step + 1) % beats_per_measure;
                 }
