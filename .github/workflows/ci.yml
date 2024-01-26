@@ -20,6 +20,22 @@ jobs:
       - name: Run tests
         run: cargo test --all-features --workspace
 
+  wasm-pack-test:
+    name: Test with wasm-pack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@nightly
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - uses: Swatinem/rust-cache@v2
+      - name: Install chrome
+        uses: browser-actions/setup-chrome@v1
+      - name: Run tests
+        run: wasm-pack test --headless --chrome
+
   rustfmt:
     name: Rustfmt
     runs-on: ubuntu-latest
