@@ -244,11 +244,11 @@ mod tests {
 
     #[test]
     fn test_format() {
-        assert_eq!(format!("{}", Note::C2), "C2");
-        assert_eq!(format!("{}", Note::A2), "A2");
-        assert_eq!(format!("{}", Note::C3), "C3");
-        assert_eq!(format!("{}", Note::A3), "A3");
-        assert_eq!(format!("{}", Note::C4), "C4");
-        assert_eq!(format!("{}", Note::A4), "A4");
+        assert_eq!(Note::C2.to_string(), "C2");
+        assert_eq!(Note::A2.to_string(), "A2");
+        assert_eq!(Note::C3.to_string(), "C3");
+        assert_eq!(Note::A3.to_string(), "A3");
+        assert_eq!(Note::C4.to_string(), "C4");
+        assert_eq!(Note::A4.to_string(), "A4");
     }
 }
