@@ -97,7 +97,30 @@ impl Sequencer {
         self.is_playing
     }
 
-    pub fn seconds_per_beat(&self) -> f64 {
+    fn seconds_per_beat(&self) -> f64 {
         (60.0 / self.bpm as f64) * (4.0 / self.resolution.beats_per_measure() as f64)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use wasm_bindgen_test::*;
+
+    wasm_bindgen_test_configure!(run_in_browser);
+
+    use super::*;
+
+    #[wasm_bindgen_test]
+    fn test_seconds_per_beat_60_8() {
+        let ctx = AudioContext::new().unwrap();
+        let seq = Sequencer::new(ctx, 60, 1, Resolution::Eighth, 100).unwrap();
+        assert_eq!(seq.seconds_per_beat(), 0.5);
+    }
+
+    #[wasm_bindgen_test]
+    fn test_seconds_per_beat_120_8() {
+        let ctx = AudioContext::new().unwrap();
+        let seq = Sequencer::new(ctx, 120, 1, Resolution::Eighth, 100).unwrap();
+        assert_eq!(seq.seconds_per_beat(), 0.25);
     }
 }
