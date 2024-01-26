@@ -32,3 +32,9 @@ impl WebWorker {
         Ok(())
     }
 }
+
+impl Drop for WebWorker {
+    fn drop(&mut self) {
+        self.handle.terminate();
+    }
+}
