@@ -7,8 +7,10 @@ wasm + Web Audio API
 
 ## Requirements
 
-- `npm`
-- `cargo`
+- [`npm`](https://docs.npmjs.com/)
+- [`cargo`](https://doc.rust-lang.org/stable/cargo/)
+- [`wasm-pack`](https://rustwasm.github.io/wasm-pack/)
+- [`chromedriver`](https://chromedriver.chromium.org/downloads) (testing)
 
 ## Setup
 
@@ -20,4 +22,11 @@ npm install
 
 ```sh
 npm run serve
+```
+
+## Testing
+
+```sh
+cargo test
+wasm-pack test --headless --chrome
 ```
