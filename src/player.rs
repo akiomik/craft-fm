@@ -75,3 +75,38 @@ impl Player {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use wasm_bindgen_test::*;
+
+    wasm_bindgen_test_configure!(run_in_browser);
+
+    use super::*;
+
+    #[wasm_bindgen_test]
+    async fn test_play() {
+        let mut player = Player::new().await.unwrap();
+        assert_eq!(player.sequencer.is_playing(), false);
+        player.play(Note::A4).unwrap();
+        assert_eq!(player.sequencer.is_playing(), true);
+    }
+
+    #[wasm_bindgen_test]
+    async fn test_stop() {
+        let mut player = Player::new().await.unwrap();
+        assert_eq!(player.sequencer.is_playing(), false);
+        player.stop().unwrap();
+        assert_eq!(player.sequencer.is_playing(), false);
+    }
+
+    #[wasm_bindgen_test]
+    async fn test_play_and_stop() {
+        let mut player = Player::new().await.unwrap();
+        assert_eq!(player.sequencer.is_playing(), false);
+        player.play(Note::A4).unwrap();
+        assert_eq!(player.sequencer.is_playing(), true);
+        player.stop().unwrap();
+        assert_eq!(player.sequencer.is_playing(), false);
+    }
+}
