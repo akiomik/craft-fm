@@ -57,17 +57,16 @@ impl Sequencer {
         let secs = self.seconds_per_beat();
         let interval = self.interval as f64 / 1000.0; // in secs
 
-        // TODO: Add offset for the first beat
-        let mut beat_time = self.ctx.current_time();
+        let mut beat_time = ctx.current_time();
         let mut step = 0;
 
         self.worker.set_onmessage(move |message| {
             if message.data() == "tick" {
-                let time = ctx.current_time();
-                let next_time = time + interval;
+                let next_time = ctx.current_time() + interval;
 
                 while beat_time < next_time {
-                    tick(beat_time, step).unwrap(); // TODO
+                    // NOTE: Added interval as an offset for the first beat
+                    tick(beat_time + interval, step).unwrap(); // TODO
                     beat_time += secs;
                     step = (step + 1) % beats_per_measure;
                 }
