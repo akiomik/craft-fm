@@ -17,6 +17,7 @@ impl Sampler {
         ctx: AudioContext,
         samples: HashMap<Note, Box<[u8]>>,
     ) -> Result<Self, JsValue> {
+        // TODO: check if samples is not empty
         let mut buffered_samples = HashMap::new();
         for (note, sample) in samples.iter() {
             let buffer = Sampler::buffer(&ctx, sample).await?;
@@ -35,12 +36,29 @@ impl Sampler {
         Ok(AudioBuffer::from(decoded))
     }
 
+    fn find_closest_note_in_samples(&self, note: &Note) -> Note {
+        let note_number = note.note_number() as i16;
+        self.samples
+            .keys()
+            .fold((Note::A4, i16::MAX), |(acc_key, acc_diff), key| {
+                let diff = (note_number - key.note_number() as i16).abs();
+                if acc_diff > diff {
+                    (key.clone(), diff)
+                } else {
+                    (acc_key, acc_diff)
+                }
+            })
+            .0
+    }
+
     fn calc_note_and_playback_rate(&self, note: &Note) -> (Note, f32) {
         if self.samples.contains_key(note) {
             (note.clone(), 1.0)
         } else {
-            // TODO: find closest note from notes
-            (Note::A3, note.freq() / Note::A3.freq())
+            let closest_note = self.find_closest_note_in_samples(note);
+            let closest_freq = closest_note.freq();
+            let closest_note = self.find_closest_note_in_samples(note);
+            (closest_note, note.freq() / closest_freq)
         }
     }
 

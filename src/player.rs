@@ -27,8 +27,16 @@ impl Player {
         let ctx = AudioContext::new()?;
         let mut samples = HashMap::new();
         samples.insert(
+            Note::A2,
+            include_bytes!("../samples/a2.m4a").as_slice().into(),
+        );
+        samples.insert(
             Note::A3,
             include_bytes!("../samples/a3.m4a").as_slice().into(),
+        );
+        samples.insert(
+            Note::A4,
+            include_bytes!("../samples/a4.m4a").as_slice().into(),
         );
         let sampler = Sampler::new(ctx.clone(), samples).await?;
         let sequencer = Sequencer::new(ctx.clone(), 120, Resolution::Eighth, 100)?;
