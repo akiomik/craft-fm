@@ -3,14 +3,17 @@ use web_sys::AudioContext;
 
 use crate::worker::WebWorker;
 
+#[allow(dead_code)]
 #[derive(Clone)]
 pub enum Resolution {
+    Quarter,
     Eighth,
 }
 
 impl Resolution {
     pub fn beats_per_measure(&self) -> usize {
         match self {
+            Resolution::Quarter => 4,
             Resolution::Eighth => 8,
         }
     }
@@ -111,9 +114,23 @@ mod tests {
     use super::*;
 
     #[wasm_bindgen_test]
+    fn test_seconds_per_beat_60_4() {
+        let ctx = AudioContext::new().unwrap();
+        let seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
+        assert_eq!(seq.seconds_per_beat(), 1.0);
+    }
+
+    #[wasm_bindgen_test]
     fn test_seconds_per_beat_60_8() {
         let ctx = AudioContext::new().unwrap();
         let seq = Sequencer::new(ctx, 60, 1, Resolution::Eighth, 100).unwrap();
+        assert_eq!(seq.seconds_per_beat(), 0.5);
+    }
+
+    #[wasm_bindgen_test]
+    fn test_seconds_per_beat_120_4() {
+        let ctx = AudioContext::new().unwrap();
+        let seq = Sequencer::new(ctx, 120, 1, Resolution::Quarter, 100).unwrap();
         assert_eq!(seq.seconds_per_beat(), 0.5);
     }
 
