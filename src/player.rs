@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 use web_sys::AudioContext;
 
-use crate::sampler::Sampler;
 use crate::note::Note;
+use crate::sampler::Sampler;
 use crate::sequencer::{Resolution, Sequencer};
 
 #[wasm_bindgen]
@@ -26,11 +26,18 @@ impl Player {
     pub async fn new() -> Result<Player, JsValue> {
         let ctx = AudioContext::new()?;
         let mut samples = HashMap::new();
-        samples.insert(Note::A3, include_bytes!("../samples/a3.wav").as_slice().into());
+        samples.insert(
+            Note::A3,
+            include_bytes!("../samples/a3.wav").as_slice().into(),
+        );
         let sampler = Sampler::new(ctx.clone(), samples).await?;
         let sequencer = Sequencer::new(ctx.clone(), 120, Resolution::Eighth, 100)?;
 
-        Ok(Self { ctx, sampler, sequencer })
+        Ok(Self {
+            ctx,
+            sampler,
+            sequencer,
+        })
     }
 
     pub fn play(&mut self, note: Note) -> Result<(), JsValue> {

@@ -13,14 +13,20 @@ pub struct Sampler {
 }
 
 impl Sampler {
-    pub async fn new(ctx: AudioContext, samples: HashMap<Note, Box<[u8]>>) -> Result<Self, JsValue> {
+    pub async fn new(
+        ctx: AudioContext,
+        samples: HashMap<Note, Box<[u8]>>,
+    ) -> Result<Self, JsValue> {
         let mut buffered_samples = HashMap::new();
         for (note, sample) in samples.iter() {
             let buffer = Sampler::buffer(&ctx, sample).await?;
             buffered_samples.insert(note.clone(), buffer);
         }
 
-        Ok(Self { ctx, samples: buffered_samples })
+        Ok(Self {
+            ctx,
+            samples: buffered_samples,
+        })
     }
 
     async fn buffer(ctx: &AudioContext, sample: &[u8]) -> Result<AudioBuffer, JsValue> {
