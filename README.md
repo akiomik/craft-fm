@@ -1,6 +1,8 @@
 craft-fm
 ========
 
+[![CI](https://github.com/akiomik/craft-fm/actions/workflows/ci.yml/badge.svg)](https://github.com/akiomik/craft-fm/actions/workflows/ci.yml)
+
 wasm + Web Audio API
 
 ## Requirements
