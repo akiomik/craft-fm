@@ -1,5 +1,7 @@
 use wasm_bindgen::prelude::*;
 
+pub mod metronome;
+
 // NOTE: A wrapper for Playable as workaround
 //       because Box<dyn Playable> cannot be received by set_song
 //       when #[wasm_bindgen(constructor)] is specified for Player::new
