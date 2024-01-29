@@ -1,3 +1,4 @@
+mod chord;
 mod interval;
 mod log;
 mod note;
