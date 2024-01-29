@@ -5,6 +5,18 @@ use wasm_bindgen::prelude::*;
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[wasm_bindgen]
 pub enum Note {
+    C0,
+    Csharp0,
+    D0,
+    Dsharp0,
+    E0,
+    F0,
+    Fsharp0,
+    G0,
+    Gsharp0,
+    A0,
+    Asharp0,
+    B0,
     C1,
     Csharp1,
     D1,
@@ -60,6 +72,18 @@ impl Note {
 
     pub fn from_note_number(note_number: u8) -> Option<Self> {
         match note_number {
+            12 => Some(Note::C0),
+            13 => Some(Note::Csharp0),
+            14 => Some(Note::D0),
+            15 => Some(Note::Dsharp0),
+            16 => Some(Note::E0),
+            17 => Some(Note::F0),
+            18 => Some(Note::Fsharp0),
+            19 => Some(Note::G0),
+            20 => Some(Note::Gsharp0),
+            21 => Some(Note::A0),
+            22 => Some(Note::Asharp0),
+            23 => Some(Note::B0),
             24 => Some(Note::C1),
             25 => Some(Note::Csharp1),
             26 => Some(Note::D1),
@@ -126,6 +150,18 @@ impl Note {
 
     pub fn note_number(&self) -> u8 {
         match self {
+            Note::C0 => 12,
+            Note::Csharp0 => 13,
+            Note::D0 => 14,
+            Note::Dsharp0 => 15,
+            Note::E0 => 16,
+            Note::F0 => 17,
+            Note::Fsharp0 => 18,
+            Note::G0 => 19,
+            Note::Gsharp0 => 20,
+            Note::A0 => 21,
+            Note::Asharp0 => 22,
+            Note::B0 => 23,
             Note::C1 => 24,
             Note::Csharp1 => 25,
             Note::D1 => 26,
@@ -220,6 +256,8 @@ mod tests {
 
     #[test]
     fn test_octave() {
+        assert_eq!(Note::C0.octave(), 0);
+        assert_eq!(Note::A0.octave(), 0);
         assert_eq!(Note::C1.octave(), 1);
         assert_eq!(Note::A1.octave(), 1);
         assert_eq!(Note::C2.octave(), 2);
@@ -232,6 +270,8 @@ mod tests {
 
     #[test]
     fn test_octave_up() {
+        assert_eq!(Note::C0.octave_up(), Some(Note::C1));
+        assert_eq!(Note::A0.octave_up(), Some(Note::A1));
         assert_eq!(Note::C1.octave_up(), Some(Note::C2));
         assert_eq!(Note::A1.octave_up(), Some(Note::A2));
         assert_eq!(Note::C2.octave_up(), Some(Note::C3));
@@ -244,8 +284,10 @@ mod tests {
 
     #[test]
     fn test_octave_down() {
-        assert_eq!(Note::C1.octave_down(), None);
-        assert_eq!(Note::A1.octave_down(), None);
+        assert_eq!(Note::C0.octave_down(), None);
+        assert_eq!(Note::A0.octave_down(), None);
+        assert_eq!(Note::C1.octave_down(), Some(Note::C0));
+        assert_eq!(Note::A1.octave_down(), Some(Note::A0));
         assert_eq!(Note::C2.octave_down(), Some(Note::C1));
         assert_eq!(Note::A2.octave_down(), Some(Note::A1));
         assert_eq!(Note::C3.octave_down(), Some(Note::C2));
@@ -256,6 +298,8 @@ mod tests {
 
     #[test]
     fn test_freq() {
+        assert_eq!(Note::C0.freq(), 16.351597);
+        assert_eq!(Note::A0.freq(), 27.5);
         assert_eq!(Note::C1.freq(), 32.703194);
         assert_eq!(Note::A1.freq(), 55.0);
         assert_eq!(Note::C2.freq(), 65.40639);
@@ -268,6 +312,8 @@ mod tests {
 
     #[test]
     fn test_pitch_class() {
+        assert_eq!(Note::C0.pitch_class(), 0);
+        assert_eq!(Note::A0.pitch_class(), 9);
         assert_eq!(Note::C1.pitch_class(), 0);
         assert_eq!(Note::A1.pitch_class(), 9);
         assert_eq!(Note::C2.pitch_class(), 0);
@@ -280,6 +326,8 @@ mod tests {
 
     #[test]
     fn test_pitch_class_label() {
+        assert_eq!(Note::C0.pitch_class_label(), "C");
+        assert_eq!(Note::A0.pitch_class_label(), "A");
         assert_eq!(Note::C1.pitch_class_label(), "C");
         assert_eq!(Note::A1.pitch_class_label(), "A");
         assert_eq!(Note::C2.pitch_class_label(), "C");
