@@ -225,6 +225,20 @@ impl Chord {
     }
 }
 
+impl Display for Chord {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
+            Chord::Major(note) => note.pitch_class_label().into(),
+            Chord::Minor(note) => format!("{}m", note.pitch_class_label()),
+            Chord::Major7th(note) => format!("{}M7", note.pitch_class_label()),
+            Chord::Minor7th(note) => format!("{}m7", note.pitch_class_label()),
+            Chord::Major9th(note) => format!("{}M9", note.pitch_class_label()),
+            Chord::Minor9th(note) => format!("{}m9", note.pitch_class_label()),
+        };
+        write!(f, "{s}")
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -236,6 +250,16 @@ mod tests {
         assert_eq!(Interval::Maj3.to_string(), "M3");
         assert_eq!(Interval::A4.to_string(), "A4");
         assert_eq!(Interval::D5.to_string(), "d5");
+    }
+
+    #[test]
+    fn test_chord_display() {
+        assert_eq!(Chord::Major(Note::C3).to_string(), "C");
+        assert_eq!(Chord::Minor(Note::C3).to_string(), "Cm");
+        assert_eq!(Chord::Major7th(Note::C3).to_string(), "CM7");
+        assert_eq!(Chord::Minor7th(Note::C3).to_string(), "Cm7");
+        assert_eq!(Chord::Major9th(Note::C3).to_string(), "CM9");
+        assert_eq!(Chord::Minor9th(Note::C3).to_string(), "Cm9");
     }
 
     #[test]
