@@ -60,6 +60,40 @@ pub enum Interval {
 
 #[allow(dead_code)]
 impl Interval {
+    pub fn quality(&self) -> Quality {
+        match self {
+            Interval::P1 => Quality::P,
+            Interval::A1 => Quality::A,
+            Interval::D2 => Quality::D,
+            Interval::Min2 => Quality::Min,
+            Interval::Maj2 => Quality::Maj,
+            Interval::A2 => Quality::A,
+            Interval::D3 => Quality::D,
+            Interval::Min3 => Quality::Min,
+            Interval::Maj3 => Quality::Maj,
+            Interval::A3 => Quality::A,
+            Interval::D4 => Quality::D,
+            Interval::P4 => Quality::P,
+            Interval::A4 => Quality::A,
+            Interval::D5 => Quality::D,
+            Interval::P5 => Quality::P,
+            Interval::A5 => Quality::A,
+            Interval::D6 => Quality::D,
+            Interval::Min6 => Quality::Min,
+            Interval::Maj6 => Quality::Maj,
+            Interval::A6 => Quality::A,
+            Interval::D7 => Quality::D,
+            Interval::Min7 => Quality::Min,
+            Interval::Maj7 => Quality::Maj,
+            Interval::A7 => Quality::A,
+            Interval::D8 => Quality::D,
+            Interval::P8 => Quality::P,
+            Interval::A8 => Quality::A,
+            Interval::Min9 => Quality::Min,
+            Interval::Maj9 => Quality::Maj,
+        }
+    }
+
     pub fn degree(&self) -> u8 {
         match self {
             Interval::P1 => 1,
@@ -129,6 +163,14 @@ impl Interval {
     }
 }
 
+impl Display for Interval {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let quality = self.quality();
+        let degree = self.degree();
+        write!(f, "{quality}{degree}")
+    }
+}
+
 #[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Chord {
@@ -186,6 +228,15 @@ impl Chord {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_interval_display() {
+        assert_eq!(Interval::P1.to_string(), "P1");
+        assert_eq!(Interval::Min2.to_string(), "m2");
+        assert_eq!(Interval::Maj3.to_string(), "M3");
+        assert_eq!(Interval::A4.to_string(), "A4");
+        assert_eq!(Interval::D5.to_string(), "d5");
+    }
 
     #[test]
     fn test_chord_notes() {
