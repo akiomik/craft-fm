@@ -1,112 +1,145 @@
-use std::collections::HashMap;
-
 use wasm_bindgen::prelude::*;
-use web_sys::AudioContext;
 
-use crate::note::Note;
-use crate::sampler::Sampler;
-use crate::sequencer::{Resolution, Sequencer};
+use crate::songs::Song;
 
 #[wasm_bindgen]
 pub struct Player {
-    ctx: AudioContext,
-    sampler: Sampler,
-    sequencer: Sequencer,
+    song: Option<Song>,
+    is_playing: bool,
 }
 
-impl Drop for Player {
-    fn drop(&mut self) {
-        let _ = self.ctx.close();
+impl Default for Player {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
 #[wasm_bindgen]
 impl Player {
     #[wasm_bindgen(constructor)]
-    pub async fn new() -> Result<Player, JsValue> {
-        let ctx = AudioContext::new()?;
-        let mut samples = HashMap::new();
-        samples.insert(
-            Note::A2,
-            include_bytes!("../samples/a2.m4a").as_slice().into(),
-        );
-        samples.insert(
-            Note::A3,
-            include_bytes!("../samples/a3.m4a").as_slice().into(),
-        );
-        samples.insert(
-            Note::A4,
-            include_bytes!("../samples/a4.m4a").as_slice().into(),
-        );
-        let sampler = Sampler::new(ctx.clone(), samples).await?;
-        let sequencer = Sequencer::new(ctx.clone(), 120, 1, Resolution::Eighth, 100)?;
-
-        Ok(Self {
-            ctx,
-            sampler,
-            sequencer,
-        })
+    pub fn new() -> Player {
+        Self {
+            song: None,
+            is_playing: false,
+        }
     }
 
-    pub fn play(&mut self, note: Note) -> Result<(), JsValue> {
-        self.sequencer.stop()?;
+    pub fn set_song(&mut self, song: Song) -> Result<(), JsValue> {
+        self.stop()?;
+        self.song = Some(song);
+        Ok(())
+    }
 
-        let ctx = self.ctx.clone();
-        let sampler = self.sampler.clone();
-
-        self.sequencer.start(move |time, step, _page| {
-            if step == 0 {
-                let src = sampler.buffer_node(&Note::C4)?;
-                src.connect_with_audio_node(&ctx.destination())?;
-                src.start_with_when(time)?;
-            } else {
-                let src = sampler.buffer_node(&note)?;
-                src.connect_with_audio_node(&ctx.destination())?;
-                src.start_with_when(time)?;
-            }
-            Ok(())
-        })?;
+    pub fn play(&mut self) -> Result<(), JsValue> {
+        if let Some(ref mut song) = self.song {
+            song.stop()?;
+            song.play()?;
+            self.is_playing = true;
+        }
 
         Ok(())
     }
 
     pub fn stop(&mut self) -> Result<(), JsValue> {
-        self.sequencer.stop()?;
+        self.is_playing = false;
+
+        if let Some(ref mut song) = self.song {
+            song.stop()?;
+        }
+
         Ok(())
+    }
+
+    pub fn is_playing(&self) -> bool {
+        self.is_playing
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use wasm_bindgen_test::*;
-
-    wasm_bindgen_test_configure!(run_in_browser);
+    use crate::songs::Playable;
 
     use super::*;
 
-    #[wasm_bindgen_test]
-    async fn test_play() {
-        let mut player = Player::new().await.unwrap();
-        assert!(!player.sequencer.is_playing());
-        player.play(Note::A4).unwrap();
-        assert!(player.sequencer.is_playing());
+    struct TestSong {}
+
+    impl TestSong {
+        pub fn new() -> Self {
+            Self {}
+        }
     }
 
-    #[wasm_bindgen_test]
-    async fn test_stop() {
-        let mut player = Player::new().await.unwrap();
-        assert!(!player.sequencer.is_playing());
-        player.stop().unwrap();
-        assert!(!player.sequencer.is_playing());
+    impl From<TestSong> for Song {
+        fn from(value: TestSong) -> Self {
+            Song::new("test".into(), Box::new(value))
+        }
     }
 
-    #[wasm_bindgen_test]
-    async fn test_play_and_stop() {
-        let mut player = Player::new().await.unwrap();
-        assert!(!player.sequencer.is_playing());
-        player.play(Note::A4).unwrap();
-        assert!(player.sequencer.is_playing());
+    impl Playable for TestSong {
+        fn play(&mut self) -> Result<(), JsValue> {
+            Ok(())
+        }
+
+        fn stop(&mut self) -> Result<(), JsValue> {
+            Ok(())
+        }
+    }
+
+    #[test]
+    fn test_play_none() {
+        let mut player = Player::new();
+        assert!(!player.is_playing());
+        player.play().unwrap();
+        assert!(!player.is_playing());
+    }
+
+    #[test]
+    fn test_play_some() {
+        let mut player = Player::new();
+        let song = TestSong::new().into();
+        player.set_song(song).unwrap();
+        assert!(!player.is_playing());
+        player.play().unwrap();
+        assert!(player.is_playing());
+    }
+
+    #[test]
+    fn test_stop_none() {
+        let mut player = Player::new();
+        assert!(!player.is_playing());
         player.stop().unwrap();
-        assert!(!player.sequencer.is_playing());
+        assert!(!player.is_playing());
+    }
+
+    #[test]
+    fn test_stop_some() {
+        let mut player = Player::new();
+        let song = TestSong::new().into();
+        player.set_song(song).unwrap();
+        assert!(!player.is_playing());
+        player.stop().unwrap();
+        assert!(!player.is_playing());
+    }
+
+    #[test]
+    fn test_play_and_stop_none() {
+        let mut player = Player::new();
+        assert!(!player.is_playing());
+        player.play().unwrap();
+        assert!(!player.is_playing());
+        player.stop().unwrap();
+        assert!(!player.is_playing());
+    }
+
+    #[test]
+    fn test_play_and_stop_some() {
+        let mut player = Player::new();
+        let song = TestSong::new().into();
+        player.set_song(song).unwrap();
+        assert!(!player.is_playing());
+        player.play().unwrap();
+        assert!(player.is_playing());
+        player.stop().unwrap();
+        assert!(!player.is_playing());
     }
 }
