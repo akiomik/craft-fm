@@ -1,5 +1,6 @@
 use wasm_bindgen::prelude::*;
 
+pub mod forest;
 pub mod metronome;
 
 // NOTE: A wrapper for Playable as workaround
