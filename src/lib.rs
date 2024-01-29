@@ -1,3 +1,4 @@
+mod arpeggiators;
 mod chord;
 mod interval;
 mod log;
