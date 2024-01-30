@@ -3,6 +3,7 @@ use std::fmt::Display;
 use crate::note::Note;
 
 #[allow(dead_code)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Quality {
     P,
     A,
