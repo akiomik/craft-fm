@@ -6,6 +6,7 @@ use wasm_bindgen::prelude::*;
 use web_sys::AudioContext;
 
 use crate::{
+    arpeggiators::UpDownArpeggiator,
     chord::Chord,
     note::Note,
     sampler::Sampler,
@@ -73,8 +74,12 @@ impl Playable for Forest {
         let rng_ref = self.rng.clone();
 
         let lhs_chords = [
-            Chord::Major9th(Note::G1).notes(),
-            Chord::Major9th(Note::C1).notes(),
+            UpDownArpeggiator::new(Chord::Major9th(Note::G1).notes(), None)
+                .take(8)
+                .collect::<Vec<Note>>(),
+            UpDownArpeggiator::new(Chord::Major9th(Note::C1).notes(), None)
+                .take(8)
+                .collect::<Vec<Note>>(),
         ];
         let rhs_chords = [
             Chord::Major9th(Note::G3).notes(),
@@ -89,10 +94,7 @@ impl Playable for Forest {
                 let chord = lhs_chords
                     .get(chord_index)
                     .expect("should be got chord from chords");
-                let note_index = if step >= 4 { 8 - step } else { step };
-                let note = chord
-                    .get(note_index)
-                    .expect("should be got note from chord");
+                let note = chord.get(step).expect("should be got note from chord");
                 let src = sampler.buffer_node(note)?;
                 src.connect_with_audio_node(&ctx.destination())?;
                 src.start_with_when(time)?;
@@ -108,7 +110,7 @@ impl Playable for Forest {
                 let chord = rhs_chords
                     .get(chord_index)
                     .expect("should be got chord from chords");
-                let note_index = rng.gen_range(0..5);
+                let note_index = rng.gen_range(0..chord.len());
                 let note = chord
                     .get(note_index)
                     .expect("should be got note from chord");
