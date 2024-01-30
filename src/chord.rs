@@ -229,12 +229,12 @@ impl Chord {
 impl Display for Chord {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let s = match self {
-            Chord::Major(note) => note.pitch_class_label().into(),
-            Chord::Minor(note) => format!("{}m", note.pitch_class_label()),
-            Chord::Major7th(note) => format!("{}M7", note.pitch_class_label()),
-            Chord::Minor7th(note) => format!("{}m7", note.pitch_class_label()),
-            Chord::Major9th(note) => format!("{}M9", note.pitch_class_label()),
-            Chord::Minor9th(note) => format!("{}m9", note.pitch_class_label()),
+            Chord::Major(note) => note.pitch_class().to_string(),
+            Chord::Minor(note) => format!("{}m", note.pitch_class()),
+            Chord::Major7th(note) => format!("{}M7", note.pitch_class()),
+            Chord::Minor7th(note) => format!("{}m7", note.pitch_class()),
+            Chord::Major9th(note) => format!("{}M9", note.pitch_class()),
+            Chord::Minor9th(note) => format!("{}m9", note.pitch_class()),
         };
         write!(f, "{s}")
     }

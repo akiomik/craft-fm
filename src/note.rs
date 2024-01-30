@@ -3,6 +3,43 @@ use std::fmt::Display;
 use wasm_bindgen::prelude::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[allow(dead_code)]
+pub enum PitchClass {
+    C,
+    CSharp,
+    D,
+    DSharp,
+    E,
+    F,
+    FSharp,
+    G,
+    GSharp,
+    A,
+    ASharp,
+    B,
+}
+
+impl Display for PitchClass {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
+            PitchClass::C => "C",
+            PitchClass::CSharp => "C#",
+            PitchClass::D => "D",
+            PitchClass::DSharp => "D#",
+            PitchClass::E => "E",
+            PitchClass::F => "F",
+            PitchClass::FSharp => "F#",
+            PitchClass::G => "G",
+            PitchClass::GSharp => "G#",
+            PitchClass::A => "A",
+            PitchClass::ASharp => "A#",
+            PitchClass::B => "B",
+        };
+        write!(f, "{s}")
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[wasm_bindgen]
 pub enum Note {
     C0 = 12,
@@ -159,24 +196,20 @@ impl Note {
         440.0 * (2.0_f32).powf(relative_note_number as f32 / Self::SEMITONES as f32)
     }
 
-    pub fn pitch_class(&self) -> u8 {
-        self.note_number() % Self::SEMITONES
-    }
-
-    pub fn pitch_class_label(&self) -> &str {
-        match self.pitch_class() {
-            0 => "C",
-            1 => "C#",
-            2 => "D",
-            3 => "C#",
-            4 => "E",
-            5 => "F",
-            6 => "F#",
-            7 => "G",
-            8 => "G#",
-            9 => "A",
-            10 => "A#",
-            11 => "B",
+    pub fn pitch_class(&self) -> PitchClass {
+        match self.note_number() % Self::SEMITONES {
+            0 => PitchClass::C,
+            1 => PitchClass::CSharp,
+            2 => PitchClass::D,
+            3 => PitchClass::DSharp,
+            4 => PitchClass::E,
+            5 => PitchClass::F,
+            6 => PitchClass::FSharp,
+            7 => PitchClass::G,
+            8 => PitchClass::GSharp,
+            9 => PitchClass::A,
+            10 => PitchClass::ASharp,
+            11 => PitchClass::B,
             _ => unreachable!("unsupported pitch class"),
         }
     }
@@ -184,7 +217,7 @@ impl Note {
 
 impl Display for Note {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let label = self.pitch_class_label();
+        let label = self.pitch_class();
         let octave = self.octave();
         write!(f, "{label}{octave}")
     }
@@ -252,30 +285,16 @@ mod tests {
 
     #[test]
     fn test_pitch_class() {
-        assert_eq!(Note::C0.pitch_class(), 0);
-        assert_eq!(Note::A0.pitch_class(), 9);
-        assert_eq!(Note::C1.pitch_class(), 0);
-        assert_eq!(Note::A1.pitch_class(), 9);
-        assert_eq!(Note::C2.pitch_class(), 0);
-        assert_eq!(Note::A2.pitch_class(), 9);
-        assert_eq!(Note::C3.pitch_class(), 0);
-        assert_eq!(Note::A3.pitch_class(), 9);
-        assert_eq!(Note::C4.pitch_class(), 0);
-        assert_eq!(Note::A4.pitch_class(), 9);
-    }
-
-    #[test]
-    fn test_pitch_class_label() {
-        assert_eq!(Note::C0.pitch_class_label(), "C");
-        assert_eq!(Note::A0.pitch_class_label(), "A");
-        assert_eq!(Note::C1.pitch_class_label(), "C");
-        assert_eq!(Note::A1.pitch_class_label(), "A");
-        assert_eq!(Note::C2.pitch_class_label(), "C");
-        assert_eq!(Note::A2.pitch_class_label(), "A");
-        assert_eq!(Note::C3.pitch_class_label(), "C");
-        assert_eq!(Note::A3.pitch_class_label(), "A");
-        assert_eq!(Note::C4.pitch_class_label(), "C");
-        assert_eq!(Note::A4.pitch_class_label(), "A");
+        assert_eq!(Note::C0.pitch_class(), PitchClass::C);
+        assert_eq!(Note::A0.pitch_class(), PitchClass::A);
+        assert_eq!(Note::C1.pitch_class(), PitchClass::C);
+        assert_eq!(Note::A1.pitch_class(), PitchClass::A);
+        assert_eq!(Note::C2.pitch_class(), PitchClass::C);
+        assert_eq!(Note::A2.pitch_class(), PitchClass::A);
+        assert_eq!(Note::C3.pitch_class(), PitchClass::C);
+        assert_eq!(Note::A3.pitch_class(), PitchClass::A);
+        assert_eq!(Note::C4.pitch_class(), PitchClass::C);
+        assert_eq!(Note::A4.pitch_class(), PitchClass::A);
     }
 
     #[test]
