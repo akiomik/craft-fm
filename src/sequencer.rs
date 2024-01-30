@@ -100,6 +100,11 @@ impl Sequencer {
         self.is_playing
     }
 
+    #[allow(dead_code)]
+    pub fn resolution(&self) -> Resolution {
+        self.resolution.clone()
+    }
+
     fn seconds_per_beat(&self) -> f64 {
         (60.0 / self.bpm as f64) * (4.0 / self.resolution.beats_per_measure() as f64)
     }
