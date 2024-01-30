@@ -73,13 +73,13 @@ impl Playable for Forest {
         let sampler = self.sampler.clone();
         let rng_ref = self.rng.clone();
 
-        let lhs_chords = [
+        let lhs_chords: [Vec<Note>; 2] = [
             UpDownArpeggiator::new(Chord::Major9th(Note::G1).notes(), None)
                 .take(8)
-                .collect::<Vec<Note>>(),
+                .collect(),
             UpDownArpeggiator::new(Chord::Major9th(Note::C1).notes(), None)
                 .take(8)
-                .collect::<Vec<Note>>(),
+                .collect(),
         ];
         let rhs_chords = [
             Chord::Major9th(Note::G3).notes(),
