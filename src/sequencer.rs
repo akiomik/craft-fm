@@ -4,7 +4,7 @@ use web_sys::AudioContext;
 use crate::worker::WebWorker;
 
 #[allow(dead_code)]
-#[derive(Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Resolution {
     Quarter,
     Eighth,
