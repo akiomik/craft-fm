@@ -1,4 +1,4 @@
-mod arpeggiators;
+mod arps;
 mod chord;
 mod interval;
 mod log;

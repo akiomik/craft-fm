@@ -6,7 +6,7 @@ use wasm_bindgen::prelude::*;
 use web_sys::AudioContext;
 
 use crate::{
-    arpeggiators::UpDownArpeggiator,
+    arps::UpDownArpeggiator,
     chord::Chord,
     note::Note,
     sampler::MelodicSampler,
