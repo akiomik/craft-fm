@@ -9,7 +9,7 @@ use crate::{
     arpeggiators::UpDownArpeggiator,
     chord::Chord,
     note::Note,
-    sampler::Sampler,
+    sampler::MelodicSampler,
     sequencer::{Resolution, Sequencer},
 };
 
@@ -18,7 +18,7 @@ use super::{Playable, Song};
 #[wasm_bindgen]
 pub struct Forest {
     ctx: AudioContext,
-    sampler: Sampler,
+    sampler: MelodicSampler,
     sequencer: Sequencer,
     rng: Rc<RefCell<ChaCha8Rng>>,
 }
@@ -48,7 +48,7 @@ impl Forest {
             Note::A4,
             include_bytes!("../../samples/a4.m4a").as_slice().into(),
         );
-        let sampler = Sampler::new(ctx.clone(), samples).await?;
+        let sampler = MelodicSampler::new(ctx.clone(), samples).await?;
         let sequencer = Sequencer::new(ctx.clone(), 74, 8, Resolution::Eighth, 100)?;
         let rng = Rc::new(RefCell::new(ChaCha8Rng::seed_from_u64(seed)));
 

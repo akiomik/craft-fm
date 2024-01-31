@@ -5,7 +5,7 @@ use web_sys::AudioContext;
 
 use crate::{
     note::Note,
-    sampler::Sampler,
+    sampler::MelodicSampler,
     sequencer::{Resolution, Sequencer},
 };
 
@@ -14,7 +14,7 @@ use super::{Playable, Song};
 #[wasm_bindgen]
 pub struct Metronome {
     ctx: AudioContext,
-    sampler: Sampler,
+    sampler: MelodicSampler,
     sequencer: Sequencer,
 }
 
@@ -31,7 +31,7 @@ impl Metronome {
             Note::A3,
             include_bytes!("../../samples/a3.m4a").as_slice().into(),
         );
-        let sampler = Sampler::new(ctx.clone(), samples).await?;
+        let sampler = MelodicSampler::new(ctx.clone(), samples).await?;
         let sequencer = Sequencer::new(ctx.clone(), bpm, 1, Resolution::Quarter, 100)?;
 
         Ok(Self {

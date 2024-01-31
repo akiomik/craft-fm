@@ -7,12 +7,12 @@ use web_sys::{AudioBuffer, AudioBufferSourceNode, AudioBufferSourceOptions, Audi
 use crate::note::Note;
 
 #[derive(Clone)]
-pub struct Sampler {
+pub struct MelodicSampler {
     ctx: AudioContext,
     samples: HashMap<Note, AudioBuffer>,
 }
 
-impl Sampler {
+impl MelodicSampler {
     pub async fn new(
         ctx: AudioContext,
         samples: HashMap<Note, Box<[u8]>>,
@@ -20,7 +20,7 @@ impl Sampler {
         // TODO: check if samples is not empty
         let mut buffered_samples = HashMap::new();
         for (note, sample) in samples.iter() {
-            let buffer = Sampler::buffer(&ctx, sample).await?;
+            let buffer = MelodicSampler::buffer(&ctx, sample).await?;
             buffered_samples.insert(note.clone(), buffer);
         }
 
@@ -101,7 +101,7 @@ mod tests {
     async fn test_find_closest_note_in_samples_0() {
         let ctx = AudioContext::new().unwrap();
         let samples = HashMap::new();
-        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
         assert_eq!(sampler.find_closest_note_in_samples(&Note::A2), None);
     }
 
@@ -110,7 +110,7 @@ mod tests {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
-        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
         assert_eq!(
             sampler.find_closest_note_in_samples(&Note::A2),
             Some(Note::A2)
@@ -122,7 +122,7 @@ mod tests {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
-        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
         assert_eq!(
             sampler.find_closest_note_in_samples(&Note::C2),
             Some(Note::A2)
@@ -135,7 +135,7 @@ mod tests {
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
         samples.insert(Note::A3, A3.into());
-        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
         assert_eq!(
             sampler.find_closest_note_in_samples(&Note::A2),
             Some(Note::A2)
@@ -152,7 +152,7 @@ mod tests {
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
         samples.insert(Note::A3, A3.into());
-        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
         assert_eq!(
             sampler.find_closest_note_in_samples(&Note::C2),
             Some(Note::A2)
@@ -171,7 +171,7 @@ mod tests {
     async fn test_calc_note_and_playback_rate_0() {
         let ctx = AudioContext::new().unwrap();
         let samples = HashMap::new();
-        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
         assert_eq!(sampler.calc_note_and_playback_rate(&Note::A2), None);
     }
 
@@ -180,7 +180,7 @@ mod tests {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
-        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
         assert_eq!(
             sampler.calc_note_and_playback_rate(&Note::A2),
             Some((Note::A2, 1.0))
@@ -192,7 +192,7 @@ mod tests {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
-        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
         assert_eq!(
             sampler.calc_note_and_playback_rate(&Note::C2),
             Some((Note::A2, 0.59460354))
@@ -209,7 +209,7 @@ mod tests {
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
         samples.insert(Note::A3, A3.into());
-        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
         assert_eq!(
             sampler.calc_note_and_playback_rate(&Note::A2),
             Some((Note::A2, 1.0))
@@ -226,7 +226,7 @@ mod tests {
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
         samples.insert(Note::A3, A3.into());
-        let sampler = Sampler::new(ctx, samples).await.unwrap();
+        let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
         assert_eq!(
             sampler.calc_note_and_playback_rate(&Note::C2),
             Some((Note::A2, 0.59460354))
