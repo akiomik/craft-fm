@@ -71,7 +71,7 @@ mod tests {
 
     impl From<TestSong> for Song {
         fn from(value: TestSong) -> Self {
-            Song::new("test".into(), Box::new(value))
+            Song::new("test", Box::new(value))
         }
     }
 

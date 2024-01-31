@@ -14,9 +14,9 @@ pub struct Song {
 }
 
 impl Song {
-    pub fn new(name: String, playable: Box<dyn Playable>) -> Self {
+    pub fn new<S: Into<String>>(name: S, playable: Box<dyn Playable>) -> Self {
         Self {
-            name,
+            name: name.into(),
             inner: playable,
         }
     }
