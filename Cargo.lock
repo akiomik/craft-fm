@@ -28,6 +28,7 @@ dependencies = [
 name = "craft-fm"
 version = "0.1.0"
 dependencies = [
+ "console_error_panic_hook",
  "getrandom",
  "rand",
  "rand_chacha",

@@ -1,3 +1,5 @@
+use std::panic;
+
 use wasm_bindgen::prelude::*;
 
 use crate::songs::Song;
@@ -18,6 +20,8 @@ impl Default for Player {
 impl Player {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Player {
+        panic::set_hook(Box::new(console_error_panic_hook::hook)); // TODO
+
         Self {
             song: None,
             is_playing: false,
