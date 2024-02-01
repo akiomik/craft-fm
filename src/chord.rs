@@ -209,19 +209,22 @@ impl Chord {
     }
 
     pub fn notes(&self) -> Vec<Note> {
+        self.intervals()
+            .iter()
+            .filter_map(|interval| {
+                Note::from_note_number(self.root_note().note_number() + interval.semitones())
+            })
+            .collect()
+    }
+
+    pub fn root_note(&self) -> Note {
         match self {
             Chord::Major(note)
             | Chord::Minor(note)
             | Chord::Major7th(note)
             | Chord::Minor7th(note)
             | Chord::Major9th(note)
-            | Chord::Minor9th(note) => self
-                .intervals()
-                .iter()
-                .filter_map(|interval| {
-                    Note::from_note_number(note.note_number() + interval.semitones())
-                })
-                .collect(),
+            | Chord::Minor9th(note) => note.clone(),
         }
     }
 }
