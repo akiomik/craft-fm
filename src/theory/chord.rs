@@ -13,9 +13,8 @@ pub enum Chord {
     Minor9th(Note),
 }
 
-#[allow(dead_code)]
-impl ChordLike for Chord {
-    fn intervals(&self) -> Vec<Interval> {
+impl Chord {
+    pub fn intervals(&self) -> Vec<Interval> {
         match self {
             Chord::Major(_) => vec![Interval::P1, Interval::Maj3, Interval::P5],
             Chord::Minor(_) => vec![Interval::P1, Interval::Min3, Interval::P5],
@@ -37,7 +36,10 @@ impl ChordLike for Chord {
             ],
         }
     }
+}
 
+#[allow(dead_code)]
+impl ChordLike for Chord {
     fn notes(&self) -> Vec<Note> {
         self.intervals()
             .iter()
