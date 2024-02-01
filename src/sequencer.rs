@@ -50,9 +50,9 @@ impl Sequencer {
         })
     }
 
-    pub fn start<F>(&mut self, tick: F) -> Result<(), JsValue>
+    pub fn start<F>(&mut self, mut tick: F) -> Result<(), JsValue>
     where
-        F: Fn(f64, usize, usize) -> Result<(), JsValue> + 'static,
+        F: FnMut(f64, usize, usize) -> Result<(), JsValue> + 'static,
     {
         if self.is_playing() {
             return Ok(());
