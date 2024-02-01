@@ -3,7 +3,7 @@ use std::collections::VecDeque;
 use super::{ChordLike, Note};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Inversion<T>(T);
+pub struct Inversion<T>(pub T);
 
 impl<T: ChordLike> ChordLike for Inversion<T> {
     fn notes(&self) -> Vec<Note> {
