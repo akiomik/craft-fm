@@ -1,4 +1,4 @@
-use crate::note::Note;
+use crate::theory::Note;
 
 pub struct DownArpeggiator {
     notes: Vec<Note>,
@@ -41,7 +41,7 @@ impl Iterator for DownArpeggiator {
 
 #[cfg(test)]
 mod tests {
-    use crate::chord::{Chord, ChordLike};
+    use crate::theory::*;
 
     use super::*;
 

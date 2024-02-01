@@ -4,9 +4,9 @@ use wasm_bindgen::prelude::*;
 use web_sys::AudioContext;
 
 use crate::{
-    note::Note,
     sampler::MelodicSampler,
     sequencer::{Resolution, Sequencer},
+    theory::Note,
 };
 
 use super::{Playable, Song};

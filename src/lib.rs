@@ -1,10 +1,9 @@
 mod arps;
-mod chord;
 mod interval;
 mod log;
-mod note;
 mod player;
 mod sampler;
 mod sequencer;
 mod songs;
+mod theory;
 mod worker;

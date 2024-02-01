@@ -7,10 +7,9 @@ use web_sys::AudioContext;
 
 use crate::{
     arps::UpDownArpeggiator,
-    chord::{Chord, ChordLike},
-    note::Note,
     sampler::MelodicSampler,
     sequencer::{Resolution, Sequencer},
+    theory::*,
 };
 
 use super::{Playable, Song};

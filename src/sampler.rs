@@ -4,7 +4,7 @@ use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::{js_sys::Uint8Array, JsFuture};
 use web_sys::{AudioBuffer, AudioBufferSourceNode, AudioBufferSourceOptions, AudioContext};
 
-use crate::note::Note;
+use crate::theory::Note;
 
 #[derive(Clone)]
 pub struct MelodicSampler {
