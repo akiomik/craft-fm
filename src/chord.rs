@@ -172,6 +172,14 @@ impl Display for Interval {
     }
 }
 
+pub trait ChordLike {
+    fn intervals(&self) -> Vec<Interval>;
+
+    fn notes(&self) -> Vec<Note>;
+
+    fn root_note(&self) -> Note;
+}
+
 #[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Chord {
@@ -184,8 +192,8 @@ pub enum Chord {
 }
 
 #[allow(dead_code)]
-impl Chord {
-    pub fn intervals(&self) -> Vec<Interval> {
+impl ChordLike for Chord {
+    fn intervals(&self) -> Vec<Interval> {
         match self {
             Chord::Major(_) => vec![Interval::P1, Interval::Maj3, Interval::P5],
             Chord::Minor(_) => vec![Interval::P1, Interval::Min3, Interval::P5],
@@ -208,7 +216,7 @@ impl Chord {
         }
     }
 
-    pub fn notes(&self) -> Vec<Note> {
+    fn notes(&self) -> Vec<Note> {
         self.intervals()
             .iter()
             .filter_map(|interval| {
@@ -217,7 +225,7 @@ impl Chord {
             .collect()
     }
 
-    pub fn root_note(&self) -> Note {
+    fn root_note(&self) -> Note {
         match self {
             Chord::Major(note)
             | Chord::Minor(note)

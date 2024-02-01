@@ -58,7 +58,7 @@ impl Iterator for UpDownArpeggiator {
 
 #[cfg(test)]
 mod tests {
-    use crate::chord::Chord;
+    use crate::chord::{Chord, ChordLike};
 
     use super::*;
 
