@@ -173,16 +173,24 @@ impl Note {
         }
     }
 
+    #[inline]
     pub fn octave(&self) -> i8 {
         (self.note_number() / Self::SEMITONES) as i8 - 1
     }
 
+    #[inline]
     pub fn octave_up(&self) -> Option<Note> {
-        Self::from_note_number(self.note_number() + Self::SEMITONES)
+        self.transpose(Self::SEMITONES as i8)
     }
 
+    #[inline]
     pub fn octave_down(&self) -> Option<Note> {
-        Self::from_note_number(self.note_number() - Self::SEMITONES)
+        self.transpose(-(Self::SEMITONES as i8))
+    }
+
+    #[inline]
+    pub fn transpose(&self, semitones: i8) -> Option<Note> {
+        Self::from_note_number((self.note_number() as i8 + semitones) as u8)
     }
 
     #[inline]
@@ -267,6 +275,20 @@ mod tests {
         assert_eq!(Note::A3.octave_down(), Some(Note::A2));
         assert_eq!(Note::C4.octave_down(), Some(Note::C3));
         assert_eq!(Note::A4.octave_down(), Some(Note::A3));
+    }
+
+    #[test]
+    fn test_transpose() {
+        assert_eq!(Note::C0.transpose(-1), None);
+        assert_eq!(Note::A0.transpose(2), Some(Note::B0));
+        assert_eq!(Note::C1.transpose(3), Some(Note::Dsharp1));
+        assert_eq!(Note::A1.transpose(-4), Some(Note::F1));
+        assert_eq!(Note::C2.transpose(5), Some(Note::F2));
+        assert_eq!(Note::A2.transpose(6), Some(Note::Dsharp3));
+        assert_eq!(Note::C3.transpose(7), Some(Note::G3));
+        assert_eq!(Note::A3.transpose(-8), Some(Note::Csharp3));
+        assert_eq!(Note::C4.transpose(9), Some(Note::A4));
+        assert_eq!(Note::A4.transpose(10), None);
     }
 
     #[test]
