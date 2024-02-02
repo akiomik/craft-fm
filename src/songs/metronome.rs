@@ -32,7 +32,7 @@ impl Metronome {
             include_bytes!("../../samples/a3.m4a").as_slice().into(),
         );
         let sampler = MelodicSampler::new(ctx.clone(), samples).await?;
-        let sequencer = Sequencer::new(bpm, 1, Resolution::Quarter, ctx.current_time(), 100)?;
+        let sequencer = Sequencer::new(bpm, 1, Resolution::Quarter, ctx.current_time(), 100);
 
         Ok(Self {
             ctx,

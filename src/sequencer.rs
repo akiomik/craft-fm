@@ -33,8 +33,8 @@ impl Sequencer {
         resolution: Resolution,
         current_time: f64,
         interval: u32,
-    ) -> Result<Self, JsValue> {
-        Ok(Self {
+    ) -> Self {
+        Self {
             bpm,
             pages,
             resolution,
@@ -42,7 +42,7 @@ impl Sequencer {
             step: 0,
             page: 0,
             beat_time: current_time,
-        })
+        }
     }
 
     pub fn tick<F>(&mut self, current_time: f64, mut f: F) -> Result<(), JsValue>
@@ -85,7 +85,7 @@ mod tests {
     #[test]
     fn test_tick_quarter() {
         let mut time = 0.0;
-        let mut seq = Sequencer::new(60, 2, Resolution::Quarter, time, 100).unwrap();
+        let mut seq = Sequencer::new(60, 2, Resolution::Quarter, time, 100);
 
         for i in 0..2 {
             for j in 0..4 {
@@ -104,7 +104,7 @@ mod tests {
     #[test]
     fn test_tick_eighth() {
         let mut time = 0.0;
-        let mut seq = Sequencer::new(60, 2, Resolution::Eighth, time, 100).unwrap();
+        let mut seq = Sequencer::new(60, 2, Resolution::Eighth, time, 100);
 
         for i in 0..2 {
             for j in 0..8 {
@@ -122,25 +122,25 @@ mod tests {
 
     #[test]
     fn test_seconds_per_beat_60_4() {
-        let seq = Sequencer::new(60, 1, Resolution::Quarter, 0.0, 100).unwrap();
+        let seq = Sequencer::new(60, 1, Resolution::Quarter, 0.0, 100);
         assert_eq!(seq.seconds_per_beat(), 1.0);
     }
 
     #[test]
     fn test_seconds_per_beat_60_8() {
-        let seq = Sequencer::new(60, 1, Resolution::Eighth, 0.0, 100).unwrap();
+        let seq = Sequencer::new(60, 1, Resolution::Eighth, 0.0, 100);
         assert_eq!(seq.seconds_per_beat(), 0.5);
     }
 
     #[test]
     fn test_seconds_per_beat_120_4() {
-        let seq = Sequencer::new(120, 1, Resolution::Quarter, 0.0, 100).unwrap();
+        let seq = Sequencer::new(120, 1, Resolution::Quarter, 0.0, 100);
         assert_eq!(seq.seconds_per_beat(), 0.5);
     }
 
     #[test]
     fn test_seconds_per_beat_120_8() {
-        let seq = Sequencer::new(120, 1, Resolution::Eighth, 0.0, 100).unwrap();
+        let seq = Sequencer::new(120, 1, Resolution::Eighth, 0.0, 100);
         assert_eq!(seq.seconds_per_beat(), 0.25);
     }
 }

@@ -48,7 +48,7 @@ impl Forest {
             include_bytes!("../../samples/a4.m4a").as_slice().into(),
         );
         let sampler = MelodicSampler::new(ctx.clone(), samples).await?;
-        let sequencer = Sequencer::new(74, 8, Resolution::Eighth, ctx.current_time(), 100)?;
+        let sequencer = Sequencer::new(74, 8, Resolution::Eighth, ctx.current_time(), 100);
         let rng = Rc::new(RefCell::new(ChaCha8Rng::seed_from_u64(seed)));
 
         Ok(Self {
