@@ -77,6 +77,11 @@ impl Sequencer {
     fn seconds_per_beat(&self) -> f64 {
         (60.0 / self.bpm as f64) * (4.0 * self.resolution.duration().relative() as f64)
     }
+
+    #[allow(dead_code)]
+    pub fn set_bpm(&mut self, bpm: f32) {
+        self.bpm = bpm;
+    }
 }
 
 #[cfg(test)]
