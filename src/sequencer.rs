@@ -53,7 +53,6 @@ impl Sequencer {
         let interval = self.interval as f64 / 1000.0; // in secs
 
         let next_time = current_time + interval;
-        println!("beat_time = {}, next_time = {next_time}", self.beat_time);
         while self.beat_time < next_time {
             // NOTE: Added interval as an offset for the first beat
             f(self.beat_time + interval, self.step, self.page).expect("tick should succeed");
@@ -90,7 +89,6 @@ mod tests {
         for i in 0..2 {
             for j in 0..4 {
                 seq.tick(time, |_time, step, page| {
-                    println!("i = {i}, j = {j}, page = {page}, step = {step}");
                     assert_eq!(page, i);
                     assert_eq!(step, j);
                     Ok(())
@@ -109,7 +107,6 @@ mod tests {
         for i in 0..2 {
             for j in 0..8 {
                 seq.tick(time, |_time, step, page| {
-                    println!("i = {i}, j = {j}, page = {page}, step = {step}");
                     assert_eq!(page, i);
                     assert_eq!(step, j);
                     Ok(())
