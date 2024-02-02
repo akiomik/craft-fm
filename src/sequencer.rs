@@ -19,7 +19,7 @@ impl Resolution {
 }
 
 pub struct Sequencer {
-    bpm: usize,
+    bpm: f32,
     pages: usize,
     resolution: Resolution,
     interval: u32,
@@ -30,7 +30,7 @@ pub struct Sequencer {
 
 impl Sequencer {
     pub fn new(
-        bpm: usize,
+        bpm: f32,
         pages: usize,
         resolution: Resolution,
         current_time: f64,
@@ -86,7 +86,7 @@ mod tests {
     #[test]
     fn test_tick_quarter() {
         let mut current_time = 0.0;
-        let mut seq = Sequencer::new(60, 2, Resolution::Quarter, current_time, 100);
+        let mut seq = Sequencer::new(60.0, 2, Resolution::Quarter, current_time, 100);
 
         for i in 0..2 {
             for j in 0..4 {
@@ -105,7 +105,7 @@ mod tests {
     #[test]
     fn test_tick_eighth() {
         let mut current_time = 0.0;
-        let mut seq = Sequencer::new(60, 2, Resolution::Eighth, current_time, 100);
+        let mut seq = Sequencer::new(60.0, 2, Resolution::Eighth, current_time, 100);
 
         for i in 0..2 {
             for j in 0..8 {
@@ -123,25 +123,25 @@ mod tests {
 
     #[test]
     fn test_seconds_per_beat_60_4() {
-        let seq = Sequencer::new(60, 1, Resolution::Quarter, 0.0, 100);
+        let seq = Sequencer::new(60.0, 1, Resolution::Quarter, 0.0, 100);
         assert_eq!(seq.seconds_per_beat(), 1.0);
     }
 
     #[test]
     fn test_seconds_per_beat_60_8() {
-        let seq = Sequencer::new(60, 1, Resolution::Eighth, 0.0, 100);
+        let seq = Sequencer::new(60.0, 1, Resolution::Eighth, 0.0, 100);
         assert_eq!(seq.seconds_per_beat(), 0.5);
     }
 
     #[test]
     fn test_seconds_per_beat_120_4() {
-        let seq = Sequencer::new(120, 1, Resolution::Quarter, 0.0, 100);
+        let seq = Sequencer::new(120.0, 1, Resolution::Quarter, 0.0, 100);
         assert_eq!(seq.seconds_per_beat(), 0.5);
     }
 
     #[test]
     fn test_seconds_per_beat_120_8() {
-        let seq = Sequencer::new(120, 1, Resolution::Eighth, 0.0, 100);
+        let seq = Sequencer::new(120.0, 1, Resolution::Eighth, 0.0, 100);
         assert_eq!(seq.seconds_per_beat(), 0.25);
     }
 }

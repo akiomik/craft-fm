@@ -21,7 +21,7 @@ pub struct Metronome {
 #[wasm_bindgen]
 impl Metronome {
     #[wasm_bindgen(constructor)]
-    pub async fn new(ctx: AudioContext, bpm: usize) -> Result<Metronome, JsValue> {
+    pub async fn new(ctx: AudioContext, bpm: f32) -> Result<Metronome, JsValue> {
         let mut samples = HashMap::new();
         samples.insert(
             Note::A2,
