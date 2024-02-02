@@ -83,36 +83,38 @@ mod tests {
 
     #[test]
     fn test_tick_quarter() {
-        let mut time = 0.0;
-        let mut seq = Sequencer::new(60, 2, Resolution::Quarter, time, 100);
+        let mut current_time = 0.0;
+        let mut seq = Sequencer::new(60, 2, Resolution::Quarter, current_time, 100);
 
         for i in 0..2 {
             for j in 0..4 {
-                seq.tick(time, |_time, step, page| {
+                seq.tick(current_time, |time, step, page| {
+                    assert_eq!(time, current_time + 0.1);
                     assert_eq!(page, i);
                     assert_eq!(step, j);
                     Ok(())
                 })
                 .unwrap();
-                time += 1.0;
+                current_time += 1.0;
             }
         }
     }
 
     #[test]
     fn test_tick_eighth() {
-        let mut time = 0.0;
-        let mut seq = Sequencer::new(60, 2, Resolution::Eighth, time, 100);
+        let mut current_time = 0.0;
+        let mut seq = Sequencer::new(60, 2, Resolution::Eighth, current_time, 100);
 
         for i in 0..2 {
             for j in 0..8 {
-                seq.tick(time, |_time, step, page| {
+                seq.tick(current_time, |time, step, page| {
+                    assert_eq!(time, current_time + 0.1);
                     assert_eq!(page, i);
                     assert_eq!(step, j);
                     Ok(())
                 })
                 .unwrap();
-                time += 0.5;
+                current_time += 0.5;
             }
         }
     }
