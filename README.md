@@ -27,6 +27,13 @@ npm run serve
 ## Testing
 
 ```sh
-cargo test
+cargo test --all-features --workspace
 wasm-pack test --headless --chrome
+```
+
+## Linting
+
+```sh
+cargo clippy --all-targets --all-features --workspace -- -D warnings
+npm run lint
 ```
