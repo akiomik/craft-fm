@@ -34,7 +34,6 @@ impl Player {
 
     pub fn play(&mut self) -> Result<(), JsValue> {
         if let Some(song_ref) = self.song.clone() {
-            // TODO: set once
             self.worker.set_onmessage(move |message| {
                 if message.data() == "tick" {
                     song_ref.borrow_mut().tick().expect("should tick");
