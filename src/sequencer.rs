@@ -1,17 +1,19 @@
 use wasm_bindgen::prelude::*;
 
+use crate::theory::Duration;
+
 #[allow(dead_code)]
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Resolution {
-    Quarter,
     Eighth,
+    Quarter,
 }
 
 impl Resolution {
-    pub fn beats_per_measure(&self) -> usize {
+    pub fn duration(&self) -> Duration {
         match self {
-            Resolution::Quarter => 4,
-            Resolution::Eighth => 8,
+            Resolution::Eighth => Duration::Eighth,
+            Resolution::Quarter => Duration::Quarter,
         }
     }
 }
@@ -49,7 +51,7 @@ impl Sequencer {
     where
         F: FnMut(f64, usize, usize) -> Result<(), JsValue>,
     {
-        let beats_per_measure = self.resolution.beats_per_measure();
+        let beats_per_measure = self.resolution.duration().beats_per_measure();
         let interval = self.interval as f64 / 1000.0; // in secs
 
         let next_time = current_time + interval;
@@ -73,7 +75,7 @@ impl Sequencer {
     }
 
     fn seconds_per_beat(&self) -> f64 {
-        (60.0 / self.bpm as f64) * (4.0 / self.resolution.beats_per_measure() as f64)
+        (60.0 / self.bpm as f64) * (4.0 * self.resolution.duration().relative() as f64)
     }
 }
 

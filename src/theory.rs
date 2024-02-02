@@ -1,5 +1,6 @@
 mod chord;
 mod chord_like;
+mod duration;
 mod interval;
 mod inversion;
 mod note;
@@ -8,6 +9,7 @@ mod quality;
 
 pub use chord::*;
 pub use chord_like::*;
+pub use duration::*;
 pub use interval::*;
 #[allow(unused_imports)]
 pub use inversion::*;
