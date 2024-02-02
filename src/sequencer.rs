@@ -55,7 +55,7 @@ impl Sequencer {
         let next_time = current_time + interval;
         while self.beat_time < next_time {
             // NOTE: Added interval as an offset for the first beat
-            f(self.beat_time + interval, self.step, self.page).expect("tick should succeed");
+            f(self.beat_time + interval, self.step, self.page)?;
 
             self.beat_time += self.seconds_per_beat();
             self.step = (self.step + 1) % beats_per_measure;
