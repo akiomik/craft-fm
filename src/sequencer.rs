@@ -1,7 +1,4 @@
 use wasm_bindgen::prelude::*;
-use web_sys::AudioContext;
-
-use crate::worker::WebWorker;
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -20,84 +17,55 @@ impl Resolution {
 }
 
 pub struct Sequencer {
-    ctx: AudioContext,
     bpm: usize,
     pages: usize,
     resolution: Resolution,
     interval: u32,
-    worker: WebWorker,
-    is_playing: bool,
+    step: usize,
+    page: usize,
+    beat_time: f64,
 }
 
 impl Sequencer {
     pub fn new(
-        ctx: AudioContext,
         bpm: usize,
         pages: usize,
         resolution: Resolution,
+        current_time: f64,
         interval: u32,
     ) -> Result<Self, JsValue> {
-        let worker = WebWorker::new("./worker.js")?;
-
         Ok(Self {
-            ctx,
             bpm,
             pages,
             resolution,
             interval,
-            worker,
-            is_playing: false,
+            step: 0,
+            page: 0,
+            beat_time: current_time,
         })
     }
 
-    pub fn start<F>(&mut self, mut tick: F) -> Result<(), JsValue>
+    pub fn tick<F>(&mut self, current_time: f64, mut f: F) -> Result<(), JsValue>
     where
-        F: FnMut(f64, usize, usize) -> Result<(), JsValue> + 'static,
+        F: FnMut(f64, usize, usize) -> Result<(), JsValue>,
     {
-        if self.is_playing() {
-            return Ok(());
-        }
-
-        let ctx = self.ctx.clone();
         let beats_per_measure = self.resolution.beats_per_measure();
-        let secs = self.seconds_per_beat();
-        let pages = self.pages;
         let interval = self.interval as f64 / 1000.0; // in secs
 
-        let mut beat_time = ctx.current_time();
-        let mut page = 0;
-        let mut step = 0;
+        let next_time = current_time + interval;
+        println!("beat_time = {}, next_time = {next_time}", self.beat_time);
+        while self.beat_time < next_time {
+            // NOTE: Added interval as an offset for the first beat
+            f(self.beat_time + interval, self.step, self.page).expect("tick should succeed");
 
-        self.worker.set_onmessage(move |message| {
-            if message.data() == "tick" {
-                let next_time = ctx.current_time() + interval;
-
-                while beat_time < next_time {
-                    // NOTE: Added interval as an offset for the first beat
-                    tick(beat_time + interval, step, page).expect("tick should succeed");
-                    beat_time += secs;
-                    step = (step + 1) % beats_per_measure;
-                    if step == 0 {
-                        page = (page + 1) % pages;
-                    }
-                }
+            self.beat_time += self.seconds_per_beat();
+            self.step = (self.step + 1) % beats_per_measure;
+            if self.step == 0 {
+                self.page = (self.page + 1) % self.pages;
             }
-        });
-        self.worker.post_message("start")?;
-        self.is_playing = true;
+        }
 
         Ok(())
-    }
-
-    pub fn stop(&mut self) -> Result<(), JsValue> {
-        self.worker.post_message("stop")?;
-        self.is_playing = false;
-        Ok(())
-    }
-
-    #[allow(dead_code)]
-    pub fn is_playing(&self) -> bool {
-        self.is_playing
     }
 
     #[allow(dead_code)]
@@ -112,66 +80,67 @@ impl Sequencer {
 
 #[cfg(test)]
 mod tests {
-    use wasm_bindgen_test::*;
-
-    wasm_bindgen_test_configure!(run_in_browser);
-
     use super::*;
 
-    #[wasm_bindgen_test]
-    fn test_start() {
-        let ctx = AudioContext::new().unwrap();
-        let mut seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
-        assert!(!seq.is_playing());
-        seq.start(|_, _, _| Ok(())).unwrap();
-        assert!(seq.is_playing());
+    #[test]
+    fn test_tick_quarter() {
+        let mut time = 0.0;
+        let mut seq = Sequencer::new(60, 2, Resolution::Quarter, time, 100).unwrap();
+
+        for i in 0..2 {
+            for j in 0..4 {
+                seq.tick(time, |_time, step, page| {
+                    println!("i = {i}, j = {j}, page = {page}, step = {step}");
+                    assert_eq!(page, i);
+                    assert_eq!(step, j);
+                    Ok(())
+                })
+                .unwrap();
+                time += 1.0;
+            }
+        }
     }
 
-    #[wasm_bindgen_test]
-    fn test_stop() {
-        let ctx = AudioContext::new().unwrap();
-        let mut seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
-        assert!(!seq.is_playing());
-        seq.stop().unwrap();
-        assert!(!seq.is_playing());
+    #[test]
+    fn test_tick_eighth() {
+        let mut time = 0.0;
+        let mut seq = Sequencer::new(60, 2, Resolution::Eighth, time, 100).unwrap();
+
+        for i in 0..2 {
+            for j in 0..8 {
+                seq.tick(time, |_time, step, page| {
+                    println!("i = {i}, j = {j}, page = {page}, step = {step}");
+                    assert_eq!(page, i);
+                    assert_eq!(step, j);
+                    Ok(())
+                })
+                .unwrap();
+                time += 0.5;
+            }
+        }
     }
 
-    #[wasm_bindgen_test]
-    fn test_start_and_stop() {
-        let ctx = AudioContext::new().unwrap();
-        let mut seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
-        assert!(!seq.is_playing());
-        seq.start(|_, _, _| Ok(())).unwrap();
-        assert!(seq.is_playing());
-        seq.stop().unwrap();
-        assert!(!seq.is_playing());
-    }
-
-    #[wasm_bindgen_test]
+    #[test]
     fn test_seconds_per_beat_60_4() {
-        let ctx = AudioContext::new().unwrap();
-        let seq = Sequencer::new(ctx, 60, 1, Resolution::Quarter, 100).unwrap();
+        let seq = Sequencer::new(60, 1, Resolution::Quarter, 0.0, 100).unwrap();
         assert_eq!(seq.seconds_per_beat(), 1.0);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
     fn test_seconds_per_beat_60_8() {
-        let ctx = AudioContext::new().unwrap();
-        let seq = Sequencer::new(ctx, 60, 1, Resolution::Eighth, 100).unwrap();
+        let seq = Sequencer::new(60, 1, Resolution::Eighth, 0.0, 100).unwrap();
         assert_eq!(seq.seconds_per_beat(), 0.5);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
     fn test_seconds_per_beat_120_4() {
-        let ctx = AudioContext::new().unwrap();
-        let seq = Sequencer::new(ctx, 120, 1, Resolution::Quarter, 100).unwrap();
+        let seq = Sequencer::new(120, 1, Resolution::Quarter, 0.0, 100).unwrap();
         assert_eq!(seq.seconds_per_beat(), 0.5);
     }
 
-    #[wasm_bindgen_test]
+    #[test]
     fn test_seconds_per_beat_120_8() {
-        let ctx = AudioContext::new().unwrap();
-        let seq = Sequencer::new(ctx, 120, 1, Resolution::Eighth, 100).unwrap();
+        let seq = Sequencer::new(120, 1, Resolution::Eighth, 0.0, 100).unwrap();
         assert_eq!(seq.seconds_per_beat(), 0.25);
     }
 }

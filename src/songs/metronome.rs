@@ -32,7 +32,7 @@ impl Metronome {
             include_bytes!("../../samples/a3.m4a").as_slice().into(),
         );
         let sampler = MelodicSampler::new(ctx.clone(), samples).await?;
-        let sequencer = Sequencer::new(ctx.clone(), bpm, 1, Resolution::Quarter, 100)?;
+        let sequencer = Sequencer::new(bpm, 1, Resolution::Quarter, ctx.current_time(), 100)?;
 
         Ok(Self {
             ctx,
@@ -49,25 +49,22 @@ impl Metronome {
 }
 
 impl Playable for Metronome {
-    fn play(&mut self) -> Result<(), JsValue> {
+    fn tick(&mut self) -> Result<(), JsValue> {
         let ctx = self.ctx.clone();
         let sampler = self.sampler.clone();
 
-        self.sequencer.start(move |time, step, _page| {
-            let src = if step == 0 {
-                sampler.buffer_node(&Note::C4)?
-            } else {
-                sampler.buffer_node(&Note::C3)?
-            };
+        self.sequencer
+            .tick(self.ctx.current_time(), move |time, step, _page| {
+                let src = if step == 0 {
+                    sampler.buffer_node(&Note::C4)?
+                } else {
+                    sampler.buffer_node(&Note::C3)?
+                };
 
-            src.connect_with_audio_node(&ctx.destination())?;
-            src.start_with_when(time)?;
+                src.connect_with_audio_node(&ctx.destination())?;
+                src.start_with_when(time)?;
 
-            Ok(())
-        })
-    }
-
-    fn stop(&mut self) -> Result<(), JsValue> {
-        self.sequencer.stop()
+                Ok(())
+            })
     }
 }

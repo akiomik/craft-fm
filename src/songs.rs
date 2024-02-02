@@ -22,18 +22,11 @@ impl Song {
     }
 
     #[inline]
-    pub fn play(&mut self) -> Result<(), JsValue> {
-        self.inner.play()
-    }
-
-    #[inline]
-    pub fn stop(&mut self) -> Result<(), JsValue> {
-        self.inner.stop()
+    pub fn tick(&mut self) -> Result<(), JsValue> {
+        self.inner.tick()
     }
 }
 
 pub trait Playable {
-    fn play(&mut self) -> Result<(), JsValue>;
-
-    fn stop(&mut self) -> Result<(), JsValue>;
+    fn tick(&mut self) -> Result<(), JsValue>;
 }
