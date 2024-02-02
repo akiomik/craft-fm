@@ -41,10 +41,15 @@ impl Metronome {
         })
     }
 
-    // NOTE: Can't use `impl Into<Song>` and `impl From<Metronome>` on js
     #[wasm_bindgen]
     pub fn into_song(self) -> Song {
-        Song::new("metronome", Box::new(self))
+        self.into()
+    }
+}
+
+impl From<Metronome> for Song {
+    fn from(value: Metronome) -> Self {
+        Song::new("metronome", Box::new(value))
     }
 }
 

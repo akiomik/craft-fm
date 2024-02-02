@@ -59,10 +59,15 @@ impl Forest {
         })
     }
 
-    // NOTE: Can't use `impl Into<Song>` and `impl From<Forest>` on js
     #[wasm_bindgen]
     pub fn into_song(self) -> Song {
-        Song::new("forest", Box::new(self))
+        self.into()
+    }
+}
+
+impl From<Forest> for Song {
+    fn from(value: Forest) -> Self {
+        Song::new("forest", Box::new(value))
     }
 }
 
