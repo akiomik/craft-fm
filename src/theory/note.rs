@@ -67,6 +67,18 @@ pub enum Note {
     A4 = 69,
     Asharp4 = 70,
     B4 = 71,
+    C5 = 72,
+    Csharp5 = 73,
+    D5 = 74,
+    Dsharp5 = 75,
+    E5 = 76,
+    F5 = 77,
+    Fsharp5 = 78,
+    G5 = 79,
+    Gsharp5 = 80,
+    A5 = 81,
+    Asharp5 = 82,
+    B5 = 83,
 }
 
 impl Note {
