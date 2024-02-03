@@ -23,6 +23,8 @@ features = [
   "AudioContext",
   "AudioDestinationNode",
   "MessageEvent",
+  "OscillatorNode",
+  "OscillatorType",
   "Window",
   "Worker",
   "console"
