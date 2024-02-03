@@ -1,4 +1,5 @@
 mod arps;
+mod envelope;
 mod interval;
 mod log;
 mod player;

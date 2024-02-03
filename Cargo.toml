@@ -23,6 +23,7 @@ features = [
   "AudioContext",
   "AudioDestinationNode",
   "AudioParam",
+  "GainNode",
   "MessageEvent",
   "OscillatorNode",
   "OscillatorType",
