@@ -22,6 +22,7 @@ features = [
   "AudioBufferSourceOptions",
   "AudioContext",
   "AudioDestinationNode",
+  "AudioParam",
   "MessageEvent",
   "OscillatorNode",
   "OscillatorType",
