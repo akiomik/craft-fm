@@ -6,5 +6,6 @@ mod player;
 mod sampler;
 mod sequencer;
 mod songs;
+mod synthesizer;
 mod theory;
 mod worker;
