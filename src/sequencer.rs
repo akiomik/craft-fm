@@ -74,7 +74,7 @@ impl Sequencer {
         self.resolution.clone()
     }
 
-    fn seconds_per_beat(&self) -> f64 {
+    pub fn seconds_per_beat(&self) -> f64 {
         (60.0 / self.bpm as f64) * (4.0 * self.resolution.duration().relative() as f64)
     }
 
