@@ -20,6 +20,8 @@ pub struct Forest {
     sampler: MelodicSampler,
     sequencer: Sequencer,
     rng: Rc<RefCell<ChaCha8Rng>>,
+    lhs_chords: Vec<Vec<Note>>,
+    rhs_chords: Vec<Vec<Note>>,
 }
 
 #[wasm_bindgen]
@@ -51,11 +53,27 @@ impl Forest {
         let sequencer = Sequencer::new(74.0, 8, Resolution::Eighth, ctx.current_time(), 100);
         let rng = Rc::new(RefCell::new(ChaCha8Rng::seed_from_u64(seed)));
 
+        let beats_per_measure = sequencer.resolution().duration().beats_per_measure();
+        let lhs_chords = vec![
+            UpDownArpeggiator::new(Chord::Major9th(Note::G1).notes())
+                .take(beats_per_measure)
+                .collect(),
+            UpDownArpeggiator::new(Chord::Major9th(Note::C1).notes())
+                .take(beats_per_measure)
+                .collect(),
+        ];
+        let rhs_chords = vec![
+            Chord::Major9th(Note::G3).notes(),
+            Chord::Major9th(Note::C3).notes(),
+        ];
+
         Ok(Self {
             ctx,
             sampler,
             sequencer,
             rng,
+            lhs_chords,
+            rhs_chords,
         })
     }
 
@@ -76,20 +94,8 @@ impl Playable for Forest {
         let ctx = self.ctx.clone();
         let sampler = self.sampler.clone();
         let rng_ref = self.rng.clone();
-        let beats_per_measure = self.sequencer.resolution().duration().beats_per_measure();
-
-        let lhs_chords: [Vec<Note>; 2] = [
-            UpDownArpeggiator::new(Chord::Major9th(Note::G1).notes())
-                .take(beats_per_measure)
-                .collect(),
-            UpDownArpeggiator::new(Chord::Major9th(Note::C1).notes())
-                .take(beats_per_measure)
-                .collect(),
-        ];
-        let rhs_chords = [
-            Chord::Major9th(Note::G3).notes(),
-            Chord::Major9th(Note::C3).notes(),
-        ];
+        let lhs_chords = self.lhs_chords.clone();
+        let rhs_chords = self.rhs_chords.clone();
 
         self.sequencer
             .tick(ctx.current_time(), move |time, step, page| {
