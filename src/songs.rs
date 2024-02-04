@@ -2,6 +2,7 @@ use wasm_bindgen::prelude::*;
 
 pub mod forest;
 pub mod metronome;
+pub mod toy808;
 
 // NOTE: A wrapper for Playable as workaround
 //       because Box<dyn Playable> cannot be received by set_song
