@@ -2,6 +2,7 @@ mod arps;
 mod envelope;
 mod interval;
 mod log;
+mod noise;
 mod player;
 mod sampler;
 mod sequencer;
