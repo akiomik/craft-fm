@@ -79,7 +79,7 @@ mod tests {
                 Note::C3
             ))))))
             .notes(),
-            vec![Note::C4, Note::E4, Note::G4, Note::B4]
+            vec![Note::C4, Note::E4, Note::G4, Note::B4, Note::D5]
         );
     }
 }

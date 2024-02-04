@@ -146,6 +146,18 @@ impl Note {
             69 => Some(Note::A4),
             70 => Some(Note::Asharp4),
             71 => Some(Note::B4),
+            72 => Some(Note::C5),
+            73 => Some(Note::Csharp5),
+            74 => Some(Note::D5),
+            75 => Some(Note::Dsharp5),
+            76 => Some(Note::E5),
+            77 => Some(Note::F5),
+            78 => Some(Note::Fsharp5),
+            79 => Some(Note::G5),
+            80 => Some(Note::Gsharp5),
+            81 => Some(Note::A5),
+            82 => Some(Note::Asharp5),
+            83 => Some(Note::B5),
             _ => None,
         }
     }
@@ -224,6 +236,8 @@ mod tests {
         assert_eq!(Note::A3.octave(), 3);
         assert_eq!(Note::C4.octave(), 4);
         assert_eq!(Note::A4.octave(), 4);
+        assert_eq!(Note::C5.octave(), 5);
+        assert_eq!(Note::A5.octave(), 5);
     }
 
     #[test]
@@ -236,8 +250,10 @@ mod tests {
         assert_eq!(Note::A2.octave_up(), Some(Note::A3));
         assert_eq!(Note::C3.octave_up(), Some(Note::C4));
         assert_eq!(Note::A3.octave_up(), Some(Note::A4));
-        assert_eq!(Note::C4.octave_up(), None);
-        assert_eq!(Note::A4.octave_up(), None);
+        assert_eq!(Note::C4.octave_up(), Some(Note::C5));
+        assert_eq!(Note::A4.octave_up(), Some(Note::A5));
+        assert_eq!(Note::C5.octave_up(), None);
+        assert_eq!(Note::A5.octave_up(), None);
     }
 
     #[test]
@@ -252,6 +268,8 @@ mod tests {
         assert_eq!(Note::A3.octave_down(), Some(Note::A2));
         assert_eq!(Note::C4.octave_down(), Some(Note::C3));
         assert_eq!(Note::A4.octave_down(), Some(Note::A3));
+        assert_eq!(Note::C5.octave_down(), Some(Note::C4));
+        assert_eq!(Note::A5.octave_down(), Some(Note::A4));
     }
 
     #[test]
@@ -265,7 +283,9 @@ mod tests {
         assert_eq!(Note::C3.transpose(7), Some(Note::G3));
         assert_eq!(Note::A3.transpose(-8), Some(Note::Csharp3));
         assert_eq!(Note::C4.transpose(9), Some(Note::A4));
-        assert_eq!(Note::A4.transpose(10), None);
+        assert_eq!(Note::A4.transpose(10), Some(Note::G5));
+        assert_eq!(Note::C5.transpose(11), Some(Note::B5));
+        assert_eq!(Note::A5.transpose(12), None);
     }
 
     #[test]
@@ -280,6 +300,8 @@ mod tests {
         assert_eq!(Note::A3.freq(), 220.0);
         assert_eq!(Note::C4.freq(), 261.62555);
         assert_eq!(Note::A4.freq(), 440.0);
+        assert_eq!(Note::C5.freq(), 523.2511);
+        assert_eq!(Note::A5.freq(), 880.0);
     }
 
     #[test]
@@ -294,6 +316,8 @@ mod tests {
         assert_eq!(Note::A3.pitch_class(), PitchClass::A);
         assert_eq!(Note::C4.pitch_class(), PitchClass::C);
         assert_eq!(Note::A4.pitch_class(), PitchClass::A);
+        assert_eq!(Note::C5.pitch_class(), PitchClass::C);
+        assert_eq!(Note::A5.pitch_class(), PitchClass::A);
     }
 
     #[test]
@@ -306,5 +330,7 @@ mod tests {
         assert_eq!(Note::A3.to_string(), "A3");
         assert_eq!(Note::C4.to_string(), "C4");
         assert_eq!(Note::A4.to_string(), "A4");
+        assert_eq!(Note::C5.to_string(), "C5");
+        assert_eq!(Note::A5.to_string(), "A5");
     }
 }
