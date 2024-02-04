@@ -19,6 +19,13 @@ import('./pkg')
       player.play();
     });
 
+    const toy808_button = document.getElementById('toy808');
+    toy808_button.addEventListener('click', () => {
+      const toy808 = new rust_module.Toy808(ctx, 140);
+      player.set_song(toy808.into_song());
+      player.play();
+    });
+
     const stop_button = document.getElementById('stop');
     stop_button.addEventListener('click', () => {
       player.stop();
