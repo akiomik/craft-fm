@@ -59,7 +59,7 @@ impl Playable for Metronome {
         let sampler = self.sampler.clone();
 
         self.sequencer
-            .tick(self.ctx.current_time(), move |time, step, _page| {
+            .tick(self.ctx.current_time(), move |time, _page, step| {
                 let src = if step == 0 {
                     sampler.buffer_node(&Note::C4)?
                 } else {

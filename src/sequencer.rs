@@ -58,7 +58,7 @@ impl Sequencer {
         let next_time = current_time + interval;
         while self.beat_time < next_time {
             // NOTE: Added interval as an offset for the first beat
-            f(self.beat_time + interval, self.step, self.page)?;
+            f(self.beat_time + interval, self.page, self.step)?;
 
             self.beat_time += seconds_per_beat;
             self.step = (self.step + 1) % beats_per_measure;
@@ -99,7 +99,7 @@ mod tests {
 
         for i in 0..2 {
             for j in 0..4 {
-                seq.tick(current_time, |time, step, page| {
+                seq.tick(current_time, |time, page, step| {
                     assert_eq!(time, current_time + 0.1);
                     assert_eq!(page, i);
                     assert_eq!(step, j);
@@ -118,7 +118,7 @@ mod tests {
 
         for i in 0..2 {
             for j in 0..8 {
-                seq.tick(current_time, |time, step, page| {
+                seq.tick(current_time, |time, page, step| {
                     assert_eq!(time, current_time + 0.1);
                     assert_eq!(page, i);
                     assert_eq!(step, j);

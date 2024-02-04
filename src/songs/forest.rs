@@ -98,7 +98,7 @@ impl Playable for Forest {
         let rhs_chords = self.rhs_chords.clone();
 
         self.sequencer
-            .tick(ctx.current_time(), move |time, step, page| {
+            .tick(ctx.current_time(), move |time, page, step| {
                 let chord_index = if page >= 4 { 1 } else { 0 };
 
                 // left hand
