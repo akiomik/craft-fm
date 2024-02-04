@@ -48,8 +48,13 @@ impl Playable for Toy808 {
 
         self.sequencer
             .tick(self.ctx.current_time(), move |time, _page, step| {
-                let src = machine.bd(time)?;
-                src.connect_with_audio_node(&ctx.destination())?;
+                if step % 2 == 0 {
+                    let bd = machine.bd(time)?;
+                    bd.connect_with_audio_node(&ctx.destination())?;
+                } else {
+                    let sd = machine.sd(time)?;
+                    sd.connect_with_audio_node(&ctx.destination())?;
+                }
 
                 Ok(())
             })
