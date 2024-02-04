@@ -52,6 +52,7 @@ impl Sequencer {
         F: FnMut(f64, usize, usize) -> Result<(), JsValue>,
     {
         let beats_per_measure = self.resolution.duration().beats_per_measure();
+        let seconds_per_beat = self.seconds_per_beat();
         let interval = self.interval as f64 / 1000.0; // in secs
 
         let next_time = current_time + interval;
@@ -59,7 +60,7 @@ impl Sequencer {
             // NOTE: Added interval as an offset for the first beat
             f(self.beat_time + interval, self.step, self.page)?;
 
-            self.beat_time += self.seconds_per_beat();
+            self.beat_time += seconds_per_beat;
             self.step = (self.step + 1) % beats_per_measure;
             if self.step == 0 {
                 self.page = (self.page + 1) % self.pages;
