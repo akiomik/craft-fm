@@ -26,9 +26,9 @@ impl Toy808 {
         osc.stop_with_when(time + duration)?;
 
         let freq = osc.frequency();
-        freq.set_value(Note::A1.freq());
-        freq.exponential_ramp_to_value_at_time(Note::A2.freq(), time + attack)?;
-        freq.exponential_ramp_to_value_at_time(Note::A1.freq(), time + attack + decay)?;
+        freq.set_value(Note::A1.freq().into());
+        freq.exponential_ramp_to_value_at_time(Note::A2.freq().into(), time + attack)?;
+        freq.exponential_ramp_to_value_at_time(Note::A1.freq().into(), time + attack + decay)?;
 
         let amp_env = AmpEnvelope::new(self.ctx.clone(), volume, attack, decay, 0.0, 0.0);
         let amp = amp_env.node(&osc, time, duration)?;
@@ -53,14 +53,17 @@ impl Toy808 {
 
         let low_osc = self.ctx.create_oscillator()?;
         low_osc.set_type(web_sys::OscillatorType::Sine);
-        low_osc.frequency().set_value(Note::C2.freq());
+        low_osc.frequency().set_value(Note::C2.freq().into());
         low_osc.start_with_when(time)?;
         low_osc.stop_with_when(time + duration)?;
 
         let low_freq = low_osc.frequency();
-        low_freq.set_value(Note::C2.freq());
-        low_freq.exponential_ramp_to_value_at_time(Note::C3.freq(), time + attack)?;
-        low_freq.exponential_ramp_to_value_at_time(Note::C2.freq(), time + attack + decay * 2.0)?;
+        low_freq.set_value(Note::C2.freq().into());
+        low_freq.exponential_ramp_to_value_at_time(Note::C3.freq().into(), time + attack)?;
+        low_freq.exponential_ramp_to_value_at_time(
+            Note::C2.freq().into(),
+            time + attack + decay * 2.0,
+        )?;
 
         let high_osc = self.ctx.create_oscillator()?;
         high_osc.set_type(web_sys::OscillatorType::Sine);
@@ -68,10 +71,12 @@ impl Toy808 {
         high_osc.stop_with_when(time + duration)?;
 
         let high_freq = high_osc.frequency();
-        low_freq.set_value(Note::C3.freq());
-        high_freq.exponential_ramp_to_value_at_time(Note::C4.freq(), time + attack)?;
-        high_freq
-            .exponential_ramp_to_value_at_time(Note::C3.freq(), time + attack + decay * 2.0)?;
+        low_freq.set_value(Note::C3.freq().into());
+        high_freq.exponential_ramp_to_value_at_time(Note::C4.freq().into(), time + attack)?;
+        high_freq.exponential_ramp_to_value_at_time(
+            Note::C3.freq().into(),
+            time + attack + decay * 2.0,
+        )?;
 
         let amp_env = AmpEnvelope::new(self.ctx.clone(), volume, attack, decay, 0.0, 0.0);
         let low_amp = amp_env.node(&low_osc, time, duration)?;

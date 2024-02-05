@@ -11,4 +11,5 @@ mod sequencer;
 mod songs;
 mod synthesizer;
 mod theory;
+mod unit;
 mod worker;

@@ -65,7 +65,7 @@ impl MelodicSampler {
                 .find_closest_note_in_samples(note)
                 .expect("closest note should be found");
             let closest_freq = closest_note.freq();
-            Some((closest_note, note.freq() / closest_freq))
+            Some((closest_note, note.freq().0 / closest_freq.0))
         }
     }
 

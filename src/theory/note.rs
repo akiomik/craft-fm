@@ -2,6 +2,8 @@ use std::fmt::Display;
 
 use wasm_bindgen::prelude::*;
 
+use crate::unit::Frequency;
+
 use super::PitchClass;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -188,9 +190,9 @@ impl Note {
     }
 
     // TODO: support other base frequencies (e.g. 442, 444)
-    pub fn freq(&self) -> f32 {
+    pub fn freq(&self) -> Frequency {
         let relative_note_number = self.note_number() as i16 - Note::A4.note_number() as i16;
-        440.0 * (2.0_f32).powf(relative_note_number as f32 / Self::SEMITONES as f32)
+        (440.0 * (2.0_f32).powf(relative_note_number as f32 / Self::SEMITONES as f32)).into()
     }
 
     pub fn pitch_class(&self) -> PitchClass {
@@ -290,18 +292,18 @@ mod tests {
 
     #[test]
     fn test_freq() {
-        assert_eq!(Note::C0.freq(), 16.351597);
-        assert_eq!(Note::A0.freq(), 27.5);
-        assert_eq!(Note::C1.freq(), 32.703194);
-        assert_eq!(Note::A1.freq(), 55.0);
-        assert_eq!(Note::C2.freq(), 65.40639);
-        assert_eq!(Note::A2.freq(), 110.0);
-        assert_eq!(Note::C3.freq(), 130.81277);
-        assert_eq!(Note::A3.freq(), 220.0);
-        assert_eq!(Note::C4.freq(), 261.62555);
-        assert_eq!(Note::A4.freq(), 440.0);
-        assert_eq!(Note::C5.freq(), 523.2511);
-        assert_eq!(Note::A5.freq(), 880.0);
+        assert_eq!(Note::C0.freq(), Frequency(16.351597));
+        assert_eq!(Note::A0.freq(), Frequency(27.5));
+        assert_eq!(Note::C1.freq(), Frequency(32.703194));
+        assert_eq!(Note::A1.freq(), Frequency(55.0));
+        assert_eq!(Note::C2.freq(), Frequency(65.40639));
+        assert_eq!(Note::A2.freq(), Frequency(110.0));
+        assert_eq!(Note::C3.freq(), Frequency(130.81277));
+        assert_eq!(Note::A3.freq(), Frequency(220.0));
+        assert_eq!(Note::C4.freq(), Frequency(261.62555));
+        assert_eq!(Note::A4.freq(), Frequency(440.0));
+        assert_eq!(Note::C5.freq(), Frequency(523.2511));
+        assert_eq!(Note::A5.freq(), Frequency(880.0));
     }
 
     #[test]

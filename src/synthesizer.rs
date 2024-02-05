@@ -19,7 +19,7 @@ impl Synthesizer {
     pub fn node(&self, note: &Note, time: f64, duration: f64) -> Result<GainNode> {
         let osc = self.ctx.create_oscillator()?;
         osc.set_type(self.shape);
-        osc.frequency().set_value(note.freq());
+        osc.frequency().set_value(note.freq().into());
         osc.start_with_when(time)?;
         osc.stop_with_when(time + duration + self.amp.release())?;
 
