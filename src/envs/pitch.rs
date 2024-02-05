@@ -16,23 +16,29 @@ pub struct PitchEnvelope {
 
 #[allow(dead_code)]
 impl PitchEnvelope {
-    pub fn new(
-        initial: Frequency,
-        peak: Frequency,
+    pub fn new<I, P, S, E>(
+        initial: I,
+        peak: P,
         attack: f64,
         decay: f64,
-        sustain: Frequency,
+        sustain: S,
         release: f64,
-        end: Frequency,
-    ) -> Self {
+        end: E,
+    ) -> Self
+    where
+        I: Into<Frequency>,
+        P: Into<Frequency>,
+        S: Into<Frequency>,
+        E: Into<Frequency>,
+    {
         Self {
-            initial,
-            peak,
+            initial: initial.into(),
+            peak: peak.into(),
             attack,
             decay,
-            sustain,
+            sustain: sustain.into(),
             release,
-            end,
+            end: end.into(),
         }
     }
 

@@ -222,6 +222,13 @@ impl Display for Note {
     }
 }
 
+impl From<Note> for Frequency {
+    #[inline]
+    fn from(value: Note) -> Self {
+        value.freq()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

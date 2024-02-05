@@ -30,15 +30,8 @@ impl Toy808 {
         osc.start_with_when(time)?;
         osc.stop_with_when(time + duration)?;
 
-        let pitch_env = PitchEnvelope::new(
-            Note::A1.freq(),
-            Note::A2.freq(),
-            attack,
-            decay,
-            Note::A1.freq(),
-            0.0,
-            Note::A1.freq(),
-        );
+        let pitch_env =
+            PitchEnvelope::new(Note::A1, Note::A2, attack, decay, Note::A1, 0.0, Note::A1);
         pitch_env.attach(&mut osc, time, duration)?;
 
         let amp_env = AmpEnvelope::new(self.ctx.clone(), volume, attack, decay, 0.0, 0.0);
@@ -68,13 +61,13 @@ impl Toy808 {
         low_osc.stop_with_when(time + duration)?;
 
         let low_pitch_env = PitchEnvelope::new(
-            Note::C2.freq(),
-            Note::C3.freq(),
+            Note::C2,
+            Note::C3,
             attack,
             decay * 2.0,
-            Note::C2.freq(),
+            Note::C2,
             0.0,
-            Note::C2.freq(),
+            Note::C2,
         );
         low_pitch_env.attach(&mut low_osc, time, duration)?;
 
@@ -84,13 +77,13 @@ impl Toy808 {
         high_osc.stop_with_when(time + duration)?;
 
         let high_pitch_env = PitchEnvelope::new(
-            Note::C3.freq(),
-            Note::C4.freq(),
+            Note::C3,
+            Note::C4,
             attack,
             decay * 2.0,
-            Note::C3.freq(),
+            Note::C3,
             0.0,
-            Note::C3.freq(),
+            Note::C3,
         );
         high_pitch_env.attach(&mut high_osc, time, duration)?;
 
