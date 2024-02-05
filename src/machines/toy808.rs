@@ -1,4 +1,4 @@
-use web_sys::{AudioContext, BiquadFilterNode, GainNode};
+use web_sys::{AudioContext, BiquadFilterNode, BiquadFilterType, GainNode, OscillatorType};
 
 use crate::{
     envs::{AmpEnvelope, PitchEnvelope},
@@ -26,7 +26,7 @@ impl Toy808 {
         let cutoff = 4000.0;
 
         let mut osc = self.ctx.create_oscillator()?;
-        osc.set_type(web_sys::OscillatorType::Sine);
+        osc.set_type(OscillatorType::Sine);
         osc.start_with_when(time)?;
         osc.stop_with_when(time + duration)?;
 
@@ -39,7 +39,7 @@ impl Toy808 {
 
         let filter = self.ctx.create_biquad_filter()?;
         filter.q().set_value(1.0);
-        filter.set_type(web_sys::BiquadFilterType::Lowpass);
+        filter.set_type(BiquadFilterType::Lowpass);
         filter.frequency().set_value(cutoff);
 
         amp.connect_with_audio_node(&filter)?;
@@ -56,7 +56,7 @@ impl Toy808 {
         let noise_cutoff = 1000.0;
 
         let mut low_osc = self.ctx.create_oscillator()?;
-        low_osc.set_type(web_sys::OscillatorType::Sine);
+        low_osc.set_type(OscillatorType::Sine);
         low_osc.start_with_when(time)?;
         low_osc.stop_with_when(time + duration)?;
 
@@ -72,7 +72,7 @@ impl Toy808 {
         low_pitch_env.attach(&mut low_osc, time, duration)?;
 
         let mut high_osc = self.ctx.create_oscillator()?;
-        high_osc.set_type(web_sys::OscillatorType::Sine);
+        high_osc.set_type(OscillatorType::Sine);
         high_osc.start_with_when(time)?;
         high_osc.stop_with_when(time + duration)?;
 
@@ -96,7 +96,7 @@ impl Toy808 {
         high_amp.connect_with_audio_node(&osc_gain)?;
 
         let osc_filter = self.ctx.create_biquad_filter()?;
-        osc_filter.set_type(web_sys::BiquadFilterType::Highpass);
+        osc_filter.set_type(BiquadFilterType::Highpass);
         osc_filter.frequency().set_value(osc_cutoff);
         osc_gain.connect_with_audio_node(&osc_filter)?;
 
@@ -105,7 +105,7 @@ impl Toy808 {
         noise.start_with_when(time)?;
 
         let noise_filter = self.ctx.create_biquad_filter()?;
-        noise_filter.set_type(web_sys::BiquadFilterType::Highpass);
+        noise_filter.set_type(BiquadFilterType::Highpass);
         noise_filter.frequency().set_value(noise_cutoff);
         noise.connect_with_audio_node(&noise_filter)?;
 
