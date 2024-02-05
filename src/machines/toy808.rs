@@ -1,6 +1,11 @@
 use web_sys::{AudioContext, BiquadFilterNode, GainNode};
 
-use crate::{envs::AmpEnvelope, noise::Noise, result::Result, theory::Note};
+use crate::{
+    envs::{AmpEnvelope, PitchEnvelope},
+    noise::Noise,
+    result::Result,
+    theory::Note,
+};
 
 #[derive(Debug, Clone)]
 pub struct Toy808 {
@@ -20,15 +25,21 @@ impl Toy808 {
         let decay = 0.002;
         let cutoff = 4000.0;
 
-        let osc = self.ctx.create_oscillator()?;
+        let mut osc = self.ctx.create_oscillator()?;
         osc.set_type(web_sys::OscillatorType::Sine);
         osc.start_with_when(time)?;
         osc.stop_with_when(time + duration)?;
 
-        let freq = osc.frequency();
-        freq.set_value(Note::A1.freq().into());
-        freq.exponential_ramp_to_value_at_time(Note::A2.freq().into(), time + attack)?;
-        freq.exponential_ramp_to_value_at_time(Note::A1.freq().into(), time + attack + decay)?;
+        let pitch_env = PitchEnvelope::new(
+            Note::A1.freq(),
+            Note::A2.freq(),
+            attack,
+            decay,
+            Note::A1.freq(),
+            0.0,
+            Note::A1.freq(),
+        );
+        pitch_env.attach(&mut osc, time, duration)?;
 
         let amp_env = AmpEnvelope::new(self.ctx.clone(), volume, attack, decay, 0.0, 0.0);
         let amp = amp_env.node(&osc, time, duration)?;
@@ -51,32 +62,37 @@ impl Toy808 {
         let osc_cutoff = 450.0;
         let noise_cutoff = 1000.0;
 
-        let low_osc = self.ctx.create_oscillator()?;
+        let mut low_osc = self.ctx.create_oscillator()?;
         low_osc.set_type(web_sys::OscillatorType::Sine);
-        low_osc.frequency().set_value(Note::C2.freq().into());
         low_osc.start_with_when(time)?;
         low_osc.stop_with_when(time + duration)?;
 
-        let low_freq = low_osc.frequency();
-        low_freq.set_value(Note::C2.freq().into());
-        low_freq.exponential_ramp_to_value_at_time(Note::C3.freq().into(), time + attack)?;
-        low_freq.exponential_ramp_to_value_at_time(
-            Note::C2.freq().into(),
-            time + attack + decay * 2.0,
-        )?;
+        let low_pitch_env = PitchEnvelope::new(
+            Note::C2.freq(),
+            Note::C3.freq(),
+            attack,
+            decay * 2.0,
+            Note::C2.freq(),
+            0.0,
+            Note::C2.freq(),
+        );
+        low_pitch_env.attach(&mut low_osc, time, duration)?;
 
-        let high_osc = self.ctx.create_oscillator()?;
+        let mut high_osc = self.ctx.create_oscillator()?;
         high_osc.set_type(web_sys::OscillatorType::Sine);
         high_osc.start_with_when(time)?;
         high_osc.stop_with_when(time + duration)?;
 
-        let high_freq = high_osc.frequency();
-        low_freq.set_value(Note::C3.freq().into());
-        high_freq.exponential_ramp_to_value_at_time(Note::C4.freq().into(), time + attack)?;
-        high_freq.exponential_ramp_to_value_at_time(
-            Note::C3.freq().into(),
-            time + attack + decay * 2.0,
-        )?;
+        let high_pitch_env = PitchEnvelope::new(
+            Note::C3.freq(),
+            Note::C4.freq(),
+            attack,
+            decay * 2.0,
+            Note::C3.freq(),
+            0.0,
+            Note::C3.freq(),
+        );
+        high_pitch_env.attach(&mut high_osc, time, duration)?;
 
         let amp_env = AmpEnvelope::new(self.ctx.clone(), volume, attack, decay, 0.0, 0.0);
         let low_amp = amp_env.node(&low_osc, time, duration)?;
