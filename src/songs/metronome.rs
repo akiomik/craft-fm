@@ -4,6 +4,7 @@ use wasm_bindgen::prelude::*;
 use web_sys::AudioContext;
 
 use crate::{
+    result::Result,
     sampler::MelodicSampler,
     sequencer::{Resolution, Sequencer},
     theory::Note,
@@ -21,7 +22,7 @@ pub struct Metronome {
 #[wasm_bindgen]
 impl Metronome {
     #[wasm_bindgen(constructor)]
-    pub async fn new(ctx: AudioContext, bpm: f32) -> Result<Metronome, JsValue> {
+    pub async fn new(ctx: AudioContext, bpm: f32) -> Result<Metronome> {
         let mut samples = HashMap::new();
         samples.insert(
             Note::A2,
@@ -54,7 +55,7 @@ impl From<Metronome> for Song {
 }
 
 impl Playable for Metronome {
-    fn tick(&mut self) -> Result<(), JsValue> {
+    fn tick(&mut self) -> Result<()> {
         let ctx = self.ctx.clone();
         let sampler = self.sampler.clone();
 

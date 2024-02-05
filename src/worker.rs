@@ -1,6 +1,8 @@
 use wasm_bindgen::prelude::*;
 use web_sys::{MessageEvent, Worker};
 
+use crate::result::Result;
+
 #[wasm_bindgen]
 pub struct WebWorker {
     closure: Option<Closure<dyn FnMut(MessageEvent)>>,
@@ -8,7 +10,7 @@ pub struct WebWorker {
 }
 
 impl WebWorker {
-    pub fn new(name: &str) -> Result<WebWorker, JsValue> {
+    pub fn new(name: &str) -> Result<WebWorker> {
         let handle = Worker::new(name)?;
 
         Ok(WebWorker {
@@ -27,7 +29,7 @@ impl WebWorker {
         self.closure = Some(closure);
     }
 
-    pub fn post_message(&self, s: &str) -> Result<(), JsValue> {
+    pub fn post_message(&self, s: &str) -> Result<()> {
         self.handle.post_message(&JsValue::from_str(s))?;
         Ok(())
     }

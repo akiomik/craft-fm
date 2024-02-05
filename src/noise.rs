@@ -1,7 +1,8 @@
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
-use wasm_bindgen::JsValue;
 use web_sys::{AudioBufferSourceNode, AudioContext};
+
+use crate::result::Result;
 
 pub struct Noise {
     ctx: AudioContext,
@@ -15,7 +16,7 @@ impl Noise {
         Self { ctx, rng }
     }
 
-    pub fn node(&mut self, duration: f64) -> Result<AudioBufferSourceNode, JsValue> {
+    pub fn node(&mut self, duration: f64) -> Result<AudioBufferSourceNode> {
         let frames = (self.ctx.sample_rate() as f64 * duration).round() as u32;
         let buffer = self.ctx.create_buffer(1, frames, self.ctx.sample_rate())?;
 

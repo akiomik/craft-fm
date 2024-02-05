@@ -1,5 +1,7 @@
 use wasm_bindgen::prelude::*;
 
+use crate::result::Result;
+
 pub mod forest;
 pub mod metronome;
 pub mod toy808;
@@ -23,11 +25,11 @@ impl Song {
     }
 
     #[inline]
-    pub fn tick(&mut self) -> Result<(), JsValue> {
+    pub fn tick(&mut self) -> Result<()> {
         self.inner.tick()
     }
 }
 
 pub trait Playable {
-    fn tick(&mut self) -> Result<(), JsValue>;
+    fn tick(&mut self) -> Result<()>;
 }

@@ -1,5 +1,6 @@
-use wasm_bindgen::JsValue;
 use web_sys::{AudioContext, AudioNode, GainNode};
+
+use crate::result::Result;
 
 #[derive(Debug, Clone)]
 #[allow(dead_code)]
@@ -57,7 +58,7 @@ impl AmpEnvelope {
         self.release
     }
 
-    pub fn node(&self, src: &AudioNode, time: f64, duration: f64) -> Result<GainNode, JsValue> {
+    pub fn node(&self, src: &AudioNode, time: f64, duration: f64) -> Result<GainNode> {
         let gain = self.ctx.create_gain()?;
         let param = gain.gain();
         param.set_value(0.0);

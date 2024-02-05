@@ -1,5 +1,7 @@
 use wasm_bindgen::prelude::*;
 
+use crate::result::Result;
+
 #[wasm_bindgen]
 pub struct Interval {
     _closure: Closure<dyn FnMut()>,
@@ -7,7 +9,7 @@ pub struct Interval {
 }
 
 impl Interval {
-    pub fn new<F: 'static>(f: F, millis: u32) -> Result<Interval, JsValue>
+    pub fn new<F: 'static>(f: F, millis: u32) -> Result<Interval>
     where
         F: FnMut(),
     {

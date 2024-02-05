@@ -3,6 +3,7 @@ use web_sys::AudioContext;
 
 use crate::{
     machines,
+    result::Result,
     sequencer::{Resolution, Sequencer},
 };
 
@@ -18,7 +19,7 @@ pub struct Toy808 {
 #[wasm_bindgen]
 impl Toy808 {
     #[wasm_bindgen(constructor)]
-    pub fn new(ctx: AudioContext, bpm: f32) -> Result<Toy808, JsValue> {
+    pub fn new(ctx: AudioContext, bpm: f32) -> Result<Toy808> {
         let machine = machines::Toy808::new(ctx.clone());
         let sequencer = Sequencer::new(bpm, 1, Resolution::Quarter, ctx.current_time(), 100);
 
@@ -42,7 +43,7 @@ impl From<Toy808> for Song {
 }
 
 impl Playable for Toy808 {
-    fn tick(&mut self) -> Result<(), JsValue> {
+    fn tick(&mut self) -> Result<()> {
         let ctx = self.ctx.clone();
         let machine = self.machine.clone();
 

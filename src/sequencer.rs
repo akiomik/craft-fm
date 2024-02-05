@@ -1,6 +1,4 @@
-use wasm_bindgen::prelude::*;
-
-use crate::theory::Duration;
+use crate::{result::Result, theory::Duration};
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -47,9 +45,9 @@ impl Sequencer {
         }
     }
 
-    pub fn tick<F>(&mut self, current_time: f64, mut f: F) -> Result<(), JsValue>
+    pub fn tick<F>(&mut self, current_time: f64, mut f: F) -> Result<()>
     where
-        F: FnMut(f64, usize, usize) -> Result<(), JsValue>,
+        F: FnMut(f64, usize, usize) -> Result<()>,
     {
         let beats_per_measure = self.resolution.duration().beats_per_measure();
         let seconds_per_beat = self.seconds_per_beat();

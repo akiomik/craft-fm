@@ -5,6 +5,7 @@ mod log;
 mod machines;
 mod noise;
 mod player;
+mod result;
 mod sampler;
 mod sequencer;
 mod songs;

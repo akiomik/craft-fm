@@ -1,7 +1,6 @@
-use wasm_bindgen::JsValue;
 use web_sys::{AudioContext, GainNode, OscillatorType};
 
-use crate::{envelope::AmpEnvelope, theory::Note};
+use crate::{envelope::AmpEnvelope, result::Result, theory::Note};
 
 #[derive(Debug, Clone)]
 #[allow(dead_code)]
@@ -17,7 +16,7 @@ impl Synthesizer {
         Self { ctx, amp, shape }
     }
 
-    pub fn node(&self, note: &Note, time: f64, duration: f64) -> Result<GainNode, JsValue> {
+    pub fn node(&self, note: &Note, time: f64, duration: f64) -> Result<GainNode> {
         let osc = self.ctx.create_oscillator()?;
         osc.set_type(self.shape);
         osc.frequency().set_value(note.freq());

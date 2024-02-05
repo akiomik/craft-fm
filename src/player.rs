@@ -2,7 +2,7 @@ use std::{cell::RefCell, panic, rc::Rc};
 
 use wasm_bindgen::prelude::*;
 
-use crate::{songs::Song, worker::WebWorker};
+use crate::{result::Result, songs::Song, worker::WebWorker};
 
 #[wasm_bindgen]
 pub struct Player {
@@ -14,7 +14,7 @@ pub struct Player {
 #[wasm_bindgen]
 impl Player {
     #[wasm_bindgen(constructor)]
-    pub fn new() -> Result<Player, JsValue> {
+    pub fn new() -> Result<Player> {
         panic::set_hook(Box::new(console_error_panic_hook::hook)); // TODO
 
         let worker = WebWorker::new("./worker.js")?;
@@ -26,13 +26,13 @@ impl Player {
         })
     }
 
-    pub fn set_song(&mut self, song: Song) -> Result<(), JsValue> {
+    pub fn set_song(&mut self, song: Song) -> Result<()> {
         self.stop()?;
         self.song = Some(Rc::new(RefCell::new(song)));
         Ok(())
     }
 
-    pub fn play(&mut self) -> Result<(), JsValue> {
+    pub fn play(&mut self) -> Result<()> {
         if let Some(song_ref) = self.song.clone() {
             self.worker.set_onmessage(move |message| {
                 if message.data() == "tick" {
@@ -47,7 +47,7 @@ impl Player {
         Ok(())
     }
 
-    pub fn stop(&mut self) -> Result<(), JsValue> {
+    pub fn stop(&mut self) -> Result<()> {
         self.worker.post_message("stop")?;
         self.is_playing = false;
 
@@ -81,7 +81,7 @@ mod tests {
     }
 
     impl Playable for TestSong {
-        fn tick(&mut self) -> Result<(), JsValue> {
+        fn tick(&mut self) -> Result<()> {
             Ok(())
         }
     }

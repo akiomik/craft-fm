@@ -1,10 +1,9 @@
 use std::collections::HashMap;
 
-use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::{js_sys::Uint8Array, JsFuture};
 use web_sys::{AudioBuffer, AudioBufferSourceNode, AudioBufferSourceOptions, AudioContext};
 
-use crate::theory::Note;
+use crate::{result::Result, theory::Note};
 
 #[derive(Clone)]
 pub struct MelodicSampler {
@@ -13,10 +12,7 @@ pub struct MelodicSampler {
 }
 
 impl MelodicSampler {
-    pub async fn new(
-        ctx: AudioContext,
-        samples: HashMap<Note, Box<[u8]>>,
-    ) -> Result<Self, JsValue> {
+    pub async fn new(ctx: AudioContext, samples: HashMap<Note, Box<[u8]>>) -> Result<Self> {
         // TODO: check if samples is not empty
         let mut buffered_samples = HashMap::new();
         for (note, sample) in samples.iter() {
@@ -30,7 +26,7 @@ impl MelodicSampler {
         })
     }
 
-    async fn buffer(ctx: &AudioContext, sample: &[u8]) -> Result<AudioBuffer, JsValue> {
+    async fn buffer(ctx: &AudioContext, sample: &[u8]) -> Result<AudioBuffer> {
         let array_buffer = Uint8Array::from(sample).buffer();
         let decoded = JsFuture::from(ctx.decode_audio_data(&array_buffer)?).await?;
         Ok(AudioBuffer::from(decoded))
@@ -73,7 +69,7 @@ impl MelodicSampler {
         }
     }
 
-    pub fn buffer_node(&self, note: &Note) -> Result<AudioBufferSourceNode, JsValue> {
+    pub fn buffer_node(&self, note: &Note) -> Result<AudioBufferSourceNode> {
         let (sample_note, playback_rate) = self.calc_note_and_playback_rate(note).unwrap();
         let buffer = self.samples.get(&sample_note).expect("note not found");
 

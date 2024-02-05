@@ -7,6 +7,7 @@ use web_sys::AudioContext;
 
 use crate::{
     arps::UpDownArpeggiator,
+    result::Result,
     sampler::MelodicSampler,
     sequencer::{Resolution, Sequencer},
     theory::*,
@@ -27,7 +28,7 @@ pub struct Forest {
 #[wasm_bindgen]
 impl Forest {
     #[wasm_bindgen(constructor)]
-    pub async fn new(ctx: AudioContext, seed: u64) -> Result<Forest, JsValue> {
+    pub async fn new(ctx: AudioContext, seed: u64) -> Result<Forest> {
         let mut samples = HashMap::new();
         samples.insert(
             Note::A0,
@@ -90,7 +91,7 @@ impl From<Forest> for Song {
 }
 
 impl Playable for Forest {
-    fn tick(&mut self) -> Result<(), JsValue> {
+    fn tick(&mut self) -> Result<()> {
         let ctx = self.ctx.clone();
         let sampler = self.sampler.clone();
         let rng_ref = self.rng.clone();

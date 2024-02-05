@@ -1,7 +1,6 @@
-use wasm_bindgen::JsValue;
 use web_sys::{AudioContext, BiquadFilterNode, GainNode};
 
-use crate::{envelope::AmpEnvelope, noise::Noise, theory::Note};
+use crate::{envelope::AmpEnvelope, noise::Noise, result::Result, theory::Note};
 
 #[derive(Debug, Clone)]
 pub struct Toy808 {
@@ -14,7 +13,7 @@ impl Toy808 {
         Self { ctx }
     }
 
-    pub fn bd(&self, time: f64) -> Result<BiquadFilterNode, JsValue> {
+    pub fn bd(&self, time: f64) -> Result<BiquadFilterNode> {
         let volume = 1.0;
         let duration = 0.125;
         let attack = 0.003;
@@ -43,7 +42,7 @@ impl Toy808 {
         Ok(filter)
     }
 
-    pub fn sd(&self, time: f64) -> Result<GainNode, JsValue> {
+    pub fn sd(&self, time: f64) -> Result<GainNode> {
         let volume = 0.25;
         let noise_volume = volume * 0.2;
         let duration = 0.125;
