@@ -4,6 +4,7 @@ use web_sys::{AudioBufferSourceNode, AudioContext};
 
 use crate::result::Result;
 
+#[derive(Debug, Clone)]
 pub struct Noise {
     ctx: AudioContext,
     rng: ChaCha8Rng,
