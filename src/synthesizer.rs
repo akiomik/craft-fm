@@ -1,6 +1,6 @@
 use web_sys::{AudioContext, GainNode, OscillatorType};
 
-use crate::{envelope::AmpEnvelope, result::Result, theory::Note};
+use crate::{envs::AmpEnvelope, result::Result, theory::Note};
 
 #[derive(Debug, Clone)]
 #[allow(dead_code)]

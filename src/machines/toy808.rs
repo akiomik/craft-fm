@@ -1,6 +1,6 @@
 use web_sys::{AudioContext, BiquadFilterNode, GainNode};
 
-use crate::{envelope::AmpEnvelope, noise::Noise, result::Result, theory::Note};
+use crate::{envs::AmpEnvelope, noise::Noise, result::Result, theory::Note};
 
 #[derive(Debug, Clone)]
 pub struct Toy808 {

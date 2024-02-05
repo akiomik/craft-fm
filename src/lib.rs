@@ -1,5 +1,5 @@
 mod arps;
-mod envelope;
+mod envs;
 mod interval;
 mod log;
 mod machines;
