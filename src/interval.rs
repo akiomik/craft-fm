@@ -9,9 +9,9 @@ pub struct Interval {
 }
 
 impl Interval {
-    pub fn new<F: 'static>(f: F, millis: u32) -> Result<Interval>
+    pub fn new<F>(f: F, millis: u32) -> Result<Interval>
     where
-        F: FnMut(),
+        F: 'static + FnMut(),
     {
         let window = web_sys::window().unwrap();
         let _closure = Closure::new(f);
