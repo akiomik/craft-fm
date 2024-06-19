@@ -19,9 +19,9 @@ impl WebWorker {
         })
     }
 
-    pub fn set_onmessage<F: 'static>(&mut self, f: F)
+    pub fn set_onmessage<F>(&mut self, f: F)
     where
-        F: FnMut(MessageEvent),
+        F: 'static + FnMut(MessageEvent),
     {
         let closure = Closure::new(f);
         self.handle
