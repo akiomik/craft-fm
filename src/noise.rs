@@ -35,7 +35,7 @@ impl Noise {
 }
 
 #[cfg(test)]
-mod tests {
+pub mod tests {
     use wasm_bindgen_test::*;
 
     wasm_bindgen_test_configure!(run_in_browser);
@@ -43,7 +43,7 @@ mod tests {
     use super::*;
 
     #[wasm_bindgen_test]
-    fn test_node() {
+    pub fn test_node() {
         let ctx = AudioContext::new().unwrap();
         let mut noise = Noise::new(ctx);
         let node = noise.node(3.0).unwrap();

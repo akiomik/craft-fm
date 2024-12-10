@@ -60,7 +60,7 @@ impl Player {
 }
 
 #[cfg(test)]
-mod tests {
+pub mod tests {
     use wasm_bindgen_test::*;
 
     use super::*;
@@ -87,7 +87,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    fn test_play_none() {
+    pub fn test_play_none() {
         let mut player = Player::new().unwrap();
         assert!(!player.is_playing());
         player.play().unwrap();
@@ -95,7 +95,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    fn test_play_some() {
+    pub fn test_play_some() {
         let mut player = Player::new().unwrap();
         assert!(!player.is_playing());
         let song = TestSong::new().into();
@@ -106,7 +106,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    fn test_stop_none() {
+    pub fn test_stop_none() {
         let mut player = Player::new().unwrap();
         assert!(!player.is_playing());
         assert!(!player.is_playing());
@@ -115,7 +115,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    fn test_stop_some() {
+    pub fn test_stop_some() {
         let mut player = Player::new().unwrap();
         let song = TestSong::new().into();
         player.set_song(song).unwrap();
@@ -125,7 +125,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    fn test_play_and_stop_none() {
+    pub fn test_play_and_stop_none() {
         let mut player = Player::new().unwrap();
         assert!(!player.is_playing());
         player.play().unwrap();
@@ -135,7 +135,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    fn test_play_and_stop_some() {
+    pub fn test_play_and_stop_some() {
         let mut player = Player::new().unwrap();
         let song = TestSong::new().into();
         player.set_song(song).unwrap();

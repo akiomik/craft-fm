@@ -83,7 +83,7 @@ impl MelodicSampler {
 }
 
 #[cfg(test)]
-mod tests {
+pub mod tests {
     use wasm_bindgen_test::*;
 
     wasm_bindgen_test_configure!(run_in_browser);
@@ -94,7 +94,7 @@ mod tests {
     const A3: &[u8] = include_bytes!("../samples/a3.m4a").as_slice();
 
     #[wasm_bindgen_test]
-    async fn test_find_closest_note_in_samples_0() {
+    pub async fn test_find_closest_note_in_samples_0() {
         let ctx = AudioContext::new().unwrap();
         let samples = HashMap::new();
         let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
@@ -102,7 +102,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    async fn test_find_closest_note_in_samples_1_contains() {
+    pub async fn test_find_closest_note_in_samples_1_contains() {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
@@ -114,7 +114,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    async fn test_find_closest_note_in_samples_1_not_contains() {
+    pub async fn test_find_closest_note_in_samples_1_not_contains() {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
@@ -126,7 +126,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    async fn test_find_closest_note_in_samples_2_contains() {
+    pub async fn test_find_closest_note_in_samples_2_contains() {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
@@ -143,7 +143,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    async fn test_find_closest_note_in_samples_2_not_contains() {
+    pub async fn test_find_closest_note_in_samples_2_not_contains() {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
@@ -164,7 +164,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    async fn test_calc_note_and_playback_rate_0() {
+    pub async fn test_calc_note_and_playback_rate_0() {
         let ctx = AudioContext::new().unwrap();
         let samples = HashMap::new();
         let sampler = MelodicSampler::new(ctx, samples).await.unwrap();
@@ -172,7 +172,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    async fn test_calc_note_and_playback_rate_1_contains() {
+    pub async fn test_calc_note_and_playback_rate_1_contains() {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
@@ -184,7 +184,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    async fn test_calc_note_and_playback_rate_1_not_contains() {
+    pub async fn test_calc_note_and_playback_rate_1_not_contains() {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
@@ -200,7 +200,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    async fn test_calc_note_and_playback_rate_2_contains() {
+    pub async fn test_calc_note_and_playback_rate_2_contains() {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
@@ -217,7 +217,7 @@ mod tests {
     }
 
     #[wasm_bindgen_test]
-    async fn test_calc_note_and_playback_rate_2_not_contains() {
+    pub async fn test_calc_note_and_playback_rate_2_not_contains() {
         let ctx = AudioContext::new().unwrap();
         let mut samples = HashMap::new();
         samples.insert(Note::A2, A2.into());
