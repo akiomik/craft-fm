@@ -73,8 +73,8 @@ impl MelodicSampler {
         let (sample_note, playback_rate) = self.calc_note_and_playback_rate(note).unwrap();
         let buffer = self.samples.get(&sample_note).expect("note not found");
 
-        let mut opts = AudioBufferSourceOptions::new();
-        opts.playback_rate(playback_rate);
+        let opts = AudioBufferSourceOptions::new();
+        opts.set_playback_rate(playback_rate);
 
         let src = AudioBufferSourceNode::new_with_options(&self.ctx, &opts)?;
         src.set_buffer(Some(buffer));
