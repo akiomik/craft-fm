@@ -13,7 +13,7 @@ pub struct Noise {
 #[allow(dead_code)]
 impl Noise {
     pub fn new(ctx: AudioContext) -> Self {
-        let rng = ChaCha8Rng::from_entropy();
+        let rng = ChaCha8Rng::from_os_rng();
         Self { ctx, rng }
     }
 
@@ -23,7 +23,7 @@ impl Noise {
 
         let mut data = vec![];
         for _ in 0..frames {
-            data.push(self.rng.gen_range(-1.0..1.0));
+            data.push(self.rng.random_range(-1.0..1.0));
         }
 
         buffer.copy_to_channel(data.as_slice(), 0)?;
