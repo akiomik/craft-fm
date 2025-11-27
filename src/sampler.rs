@@ -12,6 +12,13 @@ pub struct MelodicSampler {
 }
 
 impl MelodicSampler {
+    pub fn empty(ctx: AudioContext) -> Self {
+        Self {
+            ctx,
+            samples: HashMap::new(),
+        }
+    }
+
     pub async fn new(ctx: AudioContext, samples: HashMap<Note, Box<[u8]>>) -> Result<Self> {
         // TODO: check if samples is not empty
         let mut buffered_samples = HashMap::new();

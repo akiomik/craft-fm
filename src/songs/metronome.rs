@@ -22,8 +22,18 @@ pub struct Metronome {
 #[wasm_bindgen]
 impl Metronome {
     #[wasm_bindgen(constructor)]
-    #[allow(deprecated)]
-    pub async fn new(ctx: AudioContext, bpm: f32) -> Result<Metronome> {
+    pub fn new(ctx: AudioContext, bpm: f32) -> Metronome {
+        let sequencer = Sequencer::new(bpm, 1, Resolution::Quarter, ctx.current_time(), 100);
+
+        Self {
+            ctx: ctx.clone(),
+            sampler: MelodicSampler::empty(ctx),
+            sequencer,
+        }
+    }
+
+    #[wasm_bindgen]
+    pub async fn init(&mut self) -> Result<()> {
         let mut samples = HashMap::new();
         samples.insert(
             Note::A2,
@@ -33,14 +43,8 @@ impl Metronome {
             Note::A3,
             include_bytes!("../../samples/a3.m4a").as_slice().into(),
         );
-        let sampler = MelodicSampler::new(ctx.clone(), samples).await?;
-        let sequencer = Sequencer::new(bpm, 1, Resolution::Quarter, ctx.current_time(), 100);
-
-        Ok(Self {
-            ctx,
-            sampler,
-            sequencer,
-        })
+        self.sampler = MelodicSampler::new(self.ctx.clone(), samples).await?;
+        Ok(())
     }
 
     #[wasm_bindgen]
