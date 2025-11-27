@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@1.91.1
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
         run: cargo test --all-features --workspace
@@ -27,7 +27,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@1.91.1
       - name: Install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       - uses: Swatinem/rust-cache@v2
@@ -43,7 +43,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@1.91.1
         with:
           components: rustfmt
       - uses: Swatinem/rust-cache@v2
@@ -57,7 +57,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@1.91.1
         with:
           components: clippy
       - uses: Swatinem/rust-cache@v2
@@ -71,7 +71,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@1.91.1
       - uses: Swatinem/rust-cache@v2
       - name: Check documentation
         env:
