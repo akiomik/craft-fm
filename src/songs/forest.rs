@@ -1,4 +1,4 @@
-use std::{cell::RefCell, collections::HashMap, rc::Rc};
+use std::{cell::RefCell, rc::Rc};
 
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
@@ -48,7 +48,7 @@ impl Forest {
 
         Self {
             ctx: ctx.clone(),
-            sampler: MelodicSampler::empty(ctx),
+            sampler: MelodicSampler::new(ctx),
             sequencer,
             rng,
             lhs_chords,
@@ -58,28 +58,21 @@ impl Forest {
 
     #[wasm_bindgen]
     pub async fn init(&mut self) -> Result<()> {
-        let mut samples = HashMap::new();
-        samples.insert(
-            Note::A0,
-            include_bytes!("../../samples/a0.m4a").as_slice().into(),
-        );
-        samples.insert(
-            Note::A1,
-            include_bytes!("../../samples/a1.m4a").as_slice().into(),
-        );
-        samples.insert(
-            Note::A2,
-            include_bytes!("../../samples/a2.m4a").as_slice().into(),
-        );
-        samples.insert(
-            Note::A3,
-            include_bytes!("../../samples/a3.m4a").as_slice().into(),
-        );
-        samples.insert(
-            Note::A4,
-            include_bytes!("../../samples/a4.m4a").as_slice().into(),
-        );
-        self.sampler = MelodicSampler::new(self.ctx.clone(), samples).await?;
+        self.sampler
+            .insert(Note::A0, include_bytes!("../../samples/a0.m4a"))
+            .await?;
+        self.sampler
+            .insert(Note::A1, include_bytes!("../../samples/a1.m4a"))
+            .await?;
+        self.sampler
+            .insert(Note::A2, include_bytes!("../../samples/a2.m4a"))
+            .await?;
+        self.sampler
+            .insert(Note::A3, include_bytes!("../../samples/a3.m4a"))
+            .await?;
+        self.sampler
+            .insert(Note::A4, include_bytes!("../../samples/a4.m4a"))
+            .await?;
         Ok(())
     }
 

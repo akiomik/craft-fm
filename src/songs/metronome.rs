@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use wasm_bindgen::prelude::*;
 use web_sys::AudioContext;
 
@@ -27,23 +25,19 @@ impl Metronome {
 
         Self {
             ctx: ctx.clone(),
-            sampler: MelodicSampler::empty(ctx),
+            sampler: MelodicSampler::new(ctx),
             sequencer,
         }
     }
 
     #[wasm_bindgen]
     pub async fn init(&mut self) -> Result<()> {
-        let mut samples = HashMap::new();
-        samples.insert(
-            Note::A2,
-            include_bytes!("../../samples/a2.m4a").as_slice().into(),
-        );
-        samples.insert(
-            Note::A3,
-            include_bytes!("../../samples/a3.m4a").as_slice().into(),
-        );
-        self.sampler = MelodicSampler::new(self.ctx.clone(), samples).await?;
+        self.sampler
+            .insert(Note::A2, include_bytes!("../../samples/a2.m4a"))
+            .await?;
+        self.sampler
+            .insert(Note::A3, include_bytes!("../../samples/a3.m4a"))
+            .await?;
         Ok(())
     }
 
