@@ -28,8 +28,36 @@ pub struct Forest {
 #[wasm_bindgen]
 impl Forest {
     #[wasm_bindgen(constructor)]
-    #[allow(deprecated)]
-    pub async fn new(ctx: AudioContext, seed: u64) -> Result<Forest> {
+    pub fn new(ctx: AudioContext, seed: u64) -> Forest {
+        let sequencer = Sequencer::new(74.0, 8, Resolution::Eighth, ctx.current_time(), 100);
+        let rng = Rc::new(RefCell::new(ChaCha8Rng::seed_from_u64(seed)));
+
+        let beats_per_measure = sequencer.resolution().duration().beats_per_measure();
+        let lhs_chords = vec![
+            UpDownArpeggiator::new(Chord::Major9th(Note::G1).notes())
+                .take(beats_per_measure)
+                .collect(),
+            UpDownArpeggiator::new(Chord::Major9th(Note::C1).notes())
+                .take(beats_per_measure)
+                .collect(),
+        ];
+        let rhs_chords = vec![
+            Chord::Major9th(Note::G3).notes(),
+            Chord::Major9th(Note::C3).notes(),
+        ];
+
+        Self {
+            ctx: ctx.clone(),
+            sampler: MelodicSampler::empty(ctx),
+            sequencer,
+            rng,
+            lhs_chords,
+            rhs_chords,
+        }
+    }
+
+    #[wasm_bindgen]
+    pub async fn init(&mut self) -> Result<()> {
         let mut samples = HashMap::new();
         samples.insert(
             Note::A0,
@@ -51,32 +79,8 @@ impl Forest {
             Note::A4,
             include_bytes!("../../samples/a4.m4a").as_slice().into(),
         );
-        let sampler = MelodicSampler::new(ctx.clone(), samples).await?;
-        let sequencer = Sequencer::new(74.0, 8, Resolution::Eighth, ctx.current_time(), 100);
-        let rng = Rc::new(RefCell::new(ChaCha8Rng::seed_from_u64(seed)));
-
-        let beats_per_measure = sequencer.resolution().duration().beats_per_measure();
-        let lhs_chords = vec![
-            UpDownArpeggiator::new(Chord::Major9th(Note::G1).notes())
-                .take(beats_per_measure)
-                .collect(),
-            UpDownArpeggiator::new(Chord::Major9th(Note::C1).notes())
-                .take(beats_per_measure)
-                .collect(),
-        ];
-        let rhs_chords = vec![
-            Chord::Major9th(Note::G3).notes(),
-            Chord::Major9th(Note::C3).notes(),
-        ];
-
-        Ok(Self {
-            ctx,
-            sampler,
-            sequencer,
-            rng,
-            lhs_chords,
-            rhs_chords,
-        })
+        self.sampler = MelodicSampler::new(self.ctx.clone(), samples).await?;
+        Ok(())
     }
 
     #[wasm_bindgen]
