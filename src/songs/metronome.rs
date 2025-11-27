@@ -22,6 +22,7 @@ pub struct Metronome {
 #[wasm_bindgen]
 impl Metronome {
     #[wasm_bindgen(constructor)]
+    #[allow(deprecated)]
     pub async fn new(ctx: AudioContext, bpm: f32) -> Result<Metronome> {
         let mut samples = HashMap::new();
         samples.insert(

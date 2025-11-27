@@ -28,6 +28,7 @@ pub struct Forest {
 #[wasm_bindgen]
 impl Forest {
     #[wasm_bindgen(constructor)]
+    #[allow(deprecated)]
     pub async fn new(ctx: AudioContext, seed: u64) -> Result<Forest> {
         let mut samples = HashMap::new();
         samples.insert(
@@ -116,14 +117,14 @@ impl Playable for Forest {
                 // right hand
                 let mut rng = rng_ref.borrow_mut();
                 if step == 0
-                    || (step == 6 && rng.gen_range(0..3) == 0)
+                    || (step == 6 && rng.random_range(0..3) == 0)
                     || (page == 7 && step == 6)
                     || (page % 2 == 1 && page != 7 && step == 7)
                 {
                     let chord = rhs_chords
                         .get(chord_index)
                         .expect("should be got chord from chords");
-                    let note_index = rng.gen_range(0..chord.len());
+                    let note_index = rng.random_range(0..chord.len());
                     let note = chord
                         .get(note_index)
                         .expect("should be got note from chord");
