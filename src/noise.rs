@@ -1,4 +1,4 @@
-use rand::{Rng, SeedableRng};
+use rand::{RngExt, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 use web_sys::{AudioBufferSourceNode, AudioContext};
 
@@ -13,7 +13,7 @@ pub struct Noise {
 #[allow(dead_code)]
 impl Noise {
     pub fn new(ctx: AudioContext) -> Self {
-        let rng = ChaCha8Rng::from_os_rng();
+        let rng = ChaCha8Rng::from_rng(&mut rand::rng());
         Self { ctx, rng }
     }
 

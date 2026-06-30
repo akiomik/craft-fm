@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use rand::{Rng, SeedableRng};
+use rand::{RngExt, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 use wasm_bindgen::prelude::*;
 use web_sys::AudioContext;
