@@ -15,7 +15,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@1.91.1
+        uses: actions-rust-lang/setup-rust-toolchain@v2
+        with:
+          cache: false
+          build-warnings: ''
       - uses: Swatinem/rust-cache@v2
       - name: Run tests
         run: cargo test --all-features --workspace
@@ -27,7 +30,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@1.91.1
+        uses: actions-rust-lang/setup-rust-toolchain@v2
+        with:
+          cache: false
+          build-warnings: ''
       - name: Install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       - uses: Swatinem/rust-cache@v2
@@ -43,8 +49,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@1.91.1
+        uses: actions-rust-lang/setup-rust-toolchain@v2
         with:
+          cache: false
+          build-warnings: ''
           components: rustfmt
       - uses: Swatinem/rust-cache@v2
       - name: Check formatting
@@ -57,8 +65,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@1.91.1
+        uses: actions-rust-lang/setup-rust-toolchain@v2
         with:
+          cache: false
+          build-warnings: ''
           components: clippy
       - uses: Swatinem/rust-cache@v2
       - name: Clippy check
@@ -71,7 +81,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@1.91.1
+        uses: actions-rust-lang/setup-rust-toolchain@v2
+        with:
+          cache: false
+          build-warnings: ''
       - uses: Swatinem/rust-cache@v2
       - name: Check documentation
         env:
